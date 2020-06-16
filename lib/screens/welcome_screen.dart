@@ -193,7 +193,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                       height: 0,
                                     ),
                              TextField(
-                                enabled: ((enableButton == true && warden == true) || warden == false) ,
+                                enabled: ((enableButton == true && warden == true) || warden == false || newLogin == false) ,
                                 onChanged: (value) {
                                   email = value;
                                   validateEmail();
@@ -216,7 +216,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               ),
                                TextField(
                                  controller: textEditingControllerPassword,
-                                enabled: ((enableButton == true && warden == true) || warden == false) ,
+                                enabled: ((enableButton == true && warden == true) || warden == false || newLogin == false) ,
                                 onChanged: (value) {
                                   password = value;
                                 },
@@ -269,6 +269,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                         setState(() {
                                           newLogin = !newLogin;
                                           enableButton = !enableButton;
+                                          textEditingControllerPassword.clear();
+                                          textEditingControllerEmail.clear();
                                         });
                                       },
                                       child: Text(
