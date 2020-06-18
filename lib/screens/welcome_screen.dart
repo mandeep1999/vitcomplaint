@@ -17,8 +17,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   String email;
   String password;
   String errorMessage;
-  bool enableButton = true,
-      obscureCode = true,
+  bool obscureCode = true,
       obscurePassword = true,
       invalidEmail = false,
       loading = false;
@@ -95,7 +94,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     details = false;
   }
 
-  void enableCard(val){
+  void enableCard(val) {
     setState(() {
       if (val == 1) {
         warden = true;
@@ -188,9 +187,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           child: Column(
                             children: [
                               SizedBox(
-                                height: warden == true && newLogin == true
-                                    ? 50.0
-                                    : 124.0,
+                                height: 125.0,
                               ),
                               Text(
                                 newLogin == true ? 'Sign Up' : 'Login',
@@ -200,59 +197,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               SizedBox(
                                 height: 15.0,
                               ),
-                              warden == true && newLogin == true
-                                  ? TextField(
-                                      onChanged: (value) {
-                                        if (value.toLowerCase() ==
-                                            secretCode.toLowerCase()) {
-                                          setState(() {
-                                            enableButton = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            enableButton = false;
-                                          });
-                                        }
-                                      },
-                                      keyboardType: TextInputType.emailAddress,
-                                      obscureText: obscureCode,
-                                      decoration: InputDecoration(
-                                        hintText: 'Warden secret code',
-                                        suffixIcon: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                obscureCode = !obscureCode;
-                                              });
-                                            },
-                                            child: Icon(
-                                              Icons.remove_red_eye,
-                                              color: obscureCode == true
-                                                  ? Colors.blue
-                                                  : Colors.green,
-                                            )),
-                                        prefixIcon: Icon(Icons.code),
-                                        border: OutlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.grey),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                      ),
-                                    )
-                                  : Container(
-                                      height: 0,
-                                    ),
-                              warden == true && newLogin == true
-                                  ? SizedBox(
-                                      height: 15.0,
-                                    )
-                                  : Container(
-                                      height: 0,
-                                    ),
                               TextField(
-                                enabled:
-                                    ((enableButton == true && warden == true) ||
-                                        warden == false ||
-                                        newLogin == false),
                                 onChanged: (value) {
                                   email = value;
                                   validateEmail();
@@ -280,10 +225,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               ),
                               TextField(
                                 controller: textEditingControllerPassword,
-                                enabled:
-                                    ((enableButton == true && warden == true) ||
-                                        warden == false ||
-                                        newLogin == false),
                                 onChanged: (value) {
                                   password = value;
                                 },
@@ -319,49 +260,57 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                       colour: Colors.blue,
                                       onPressed: invalidEmail == false
                                           ? () async {
-                                              setState(() {
-                                                if (email != null && password !=null) {
+                                              if (email != null &&
+                                                  password != null) {
+                                                setState(() {
                                                   loading = true;
-                                                } else {
+                                                });
+                                                if (newLogin == true) {
+                                                  errorMessage =
+                                                      await auth.signUp(email,
+                                                          password, warden);
+
+                                                  if (auth.errorMessage !=
+                                                      null) {
+                                                    print(
+                                                        'welcome screen sign up');
+                                                    showError(errorMessage);
+                                                  } else {
+                                                    showError(
+                                                        'Verify your email id.');
+                                                  }
+                                                } else if (newLogin == false) {
+                                                  errorMessage =
+                                                      await auth.signIn(email,
+                                                          password, warden);
+
+                                                  if (auth.errorMessage !=
+                                                      null) {
+                                                    print(
+                                                        'welcome screen sign in');
+                                                    showError(errorMessage);
+                                                  }
+                                                }
+                                                setState(() {
+                                                  loading = false;
+                                                });
+                                              } else {
+                                                setState(() {
                                                   loading = false;
                                                   showError(
                                                       'Please provide email id and password.');
-                                                }
-                                              });
-
-                                              if (newLogin == true) {
-                                                errorMessage =
-                                                    await auth.signUp(email,
-                                                        password, warden);
-
-                                                if (auth.errorMessage != null) {
-                                                  print(
-                                                      'welcome screen sign up');
-                                                  showError(errorMessage);
-                                                } else {
-                                                  showError(
-                                                      'Verify your email id.');
-                                                }
-                                              } else if (newLogin == false) {
-                                                errorMessage =
-                                                    await auth.signIn(email,
-                                                        password, warden);
-
-                                                if (auth.errorMessage != null) {
-                                                  print(
-                                                      'welcome screen sign in');
-                                                  showError(errorMessage);
-                                                }
+                                                });
                                               }
-                                              setState(() {
-                                                loading = false;
-                                              });
                                             }
                                           : () {
-                                              showError('Invalid email');
+                                              showError('Invalid email.');
                                             },
                                     )
-                                  : RoundedButton(title: 'Loading...',onPressed: (){},colour: Colors.blue,),
+                                  : RoundedButton(
+                                      title: 'Loading...',
+                                      onPressed: () {},
+                                      colour: Colors.blue,
+                                    ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -370,7 +319,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                       onTap: () {
                                         setState(() {
                                           newLogin = !newLogin;
-                                          enableButton = !enableButton;
                                           textEditingControllerPassword.clear();
                                           textEditingControllerEmail.clear();
                                         });
