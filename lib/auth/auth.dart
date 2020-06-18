@@ -1,8 +1,9 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class BaseAuth {
-  Future<String> signIn(String email, String password,bool warden);
+  Future<String> signIn(String email, String password, bool warden);
   Future<String> signUp(String email, String password, bool warden);
   Future<void> signOut();
 }
@@ -17,15 +18,27 @@ class Auth implements BaseAuth {
     print('signup');
     errorMessage = null;
     try {
-      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      user = result.user;
       if (warden == true) {
-        await user.sendEmailVerification();
-        setAdmin(warden, email);
+        await _firebaseAuth.signInAnonymously();
+        bool ans = await checkEmail(email);
+        if (ans == true) {
+          AuthCredential credential = EmailAuthProvider.getCredential(email: email,password: password);
+          (await _firebaseAuth.currentUser()).linkWithCredential(credential);
+          user = await _firebaseAuth.currentUser();
+          user.sendEmailVerification();
+          await setAdmin(warden, email);
+        }
+        else{
+          errorMessage = "You are not authorized.";
+          return errorMessage;
+        }
+        await signOut();
       } else {
-        await user.sendEmailVerification();
-        setAdmin(warden, email);
+        AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        user = result.user;
+        user.sendEmailVerification();
+        await setAdmin(warden, email);
       }
     } catch (error) {
       print(error.code);
@@ -107,9 +120,9 @@ class Auth implements BaseAuth {
           return errorMessage;
         }
       }
-      if(warden == false){
+      if (warden == false) {
         adminResult = await checkAdmin();
-        if(adminResult == true){
+        if (adminResult == true) {
           await signOut();
           errorMessage = "You are not a student.";
           return errorMessage;
@@ -161,5 +174,15 @@ class Auth implements BaseAuth {
       }
     }
     return true;
+  }
+
+  Future<bool> checkEmail(String email) async {
+    final items = await _firestore.collection('emails').getDocuments();
+    for (var message in items.documents) {
+      if (message.data['email'] == email) {
+        return true;
+      }
+    }
+    return false;
   }
 }
