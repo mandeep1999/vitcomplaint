@@ -132,7 +132,10 @@ class Auth implements BaseAuth {
       }
       return user.uid;
     }
-    return null;
+    else{
+      errorMessage ='Email not verified.';
+      return errorMessage;
+    }
   }
 
   @override
