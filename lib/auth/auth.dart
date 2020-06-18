@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -18,24 +17,31 @@ class Auth implements BaseAuth {
     print('signup');
     errorMessage = null;
     try {
+      print('1');
       if (warden == true) {
         await _firebaseAuth.signInAnonymously();
         bool ans = await checkEmail(email);
+        print('2' + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         if (ans == true) {
-          AuthCredential credential = EmailAuthProvider.getCredential(email: email,password: password);
-          (await _firebaseAuth.currentUser()).linkWithCredential(credential);
+          print('3  @@@@@@@@@@@@@@@@@@@@@@@@@@');
+          user = await _firebaseAuth.currentUser();
+          user.delete();
+          AuthResult result = await _firebaseAuth
+              .createUserWithEmailAndPassword(email: email, password: password);
           user = await _firebaseAuth.currentUser();
           user.sendEmailVerification();
           await setAdmin(warden, email);
-          await signOut();
-        }
-        else{
+          print('4 ###################');
+        } else {
+          print('5 %%%%%%%%%%%%%%%%%%%%%%%');
           user = await _firebaseAuth.currentUser();
           user.delete();
           errorMessage = "You are not authorized.";
+          print('6 ^^^^^^^^^^^^^^^^^^^^^^^^^');
           return errorMessage;
         }
       } else {
+        print('7 &&&&&&&&&&&&&&&&&&&&&&&&&&&&');
         AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password);
         user = result.user;
@@ -43,6 +49,7 @@ class Auth implements BaseAuth {
         await setAdmin(warden, email);
       }
     } catch (error) {
+      print(')))))))))))))))))))))))))');
       print(error.code);
       switch (error.code) {
         case "ERROR_EMAIL_ALREADY_IN_USE":
@@ -60,9 +67,6 @@ class Auth implements BaseAuth {
         case "ERROR_TOO_MANY_REQUESTS":
           errorMessage = "Too many requests. Try again later.";
           break;
-        case "ERROR_OPERATION_NOT_ALLOWED":
-          errorMessage = "Signing in with Email and Password is not enabled.";
-          break;
         default:
           errorMessage = "Something went wrong.";
       }
@@ -70,7 +74,6 @@ class Auth implements BaseAuth {
     if (errorMessage != null) {
       return errorMessage;
     }
-
     return user.uid;
   }
 
@@ -131,9 +134,8 @@ class Auth implements BaseAuth {
         }
       }
       return user.uid;
-    }
-    else{
-      errorMessage ='Email not verified.';
+    } else {
+      errorMessage = 'Email not verified.';
       return errorMessage;
     }
   }
@@ -148,10 +150,10 @@ class Auth implements BaseAuth {
   }
 
   Future<void> setAdmin(bool warden, String email) async {
-      await _firestore
-          .collection("profiles")
-          .document(email)
-          .setData({'email': email, 'warden': warden});
+    await _firestore
+        .collection("profiles")
+        .document(email)
+        .setData({'email': email, 'warden': warden});
   }
 
   Future<bool> checkAdmin() async {
