@@ -7,6 +7,7 @@ final lightTheme = ThemeData(
   primaryColor: Color(0xff3e51b5),
   brightness: Brightness.light,
   backgroundColor: const Color(0xFFE5E5E5),
+  textTheme: TextTheme(bodyText2: TextStyle(color: Color(0xff3e51b5))),
   accentColor: Colors.black,
   accentIconTheme: IconThemeData(color: Colors.red),
   iconTheme: IconThemeData(color: Color(0xff3e51b5)),

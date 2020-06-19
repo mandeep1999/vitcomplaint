@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'file:///C:/Users/mandy/Desktop/practice/vit_complaint/lib/components/home_screen.dart';
+import 'package:vitcomplaint/components/user_screen.dart';
+import 'package:vitcomplaint/components/home_screen.dart';
+import 'package:vitcomplaint/components/profile_screen.dart';
+
 class Home extends StatefulWidget {
   static final String id = 'home';
   @override
@@ -10,9 +13,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 1;
   static List<Widget> _widgetOptions = <Widget>[
-  HomeScreen(),
-  HomeScreen(),
-  HomeScreen(),
+    UserScreen(),
+    HomeScreen(),
+    ProfileScreen(),
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -24,10 +27,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-        ),
-        body:  _widgetOptions.elementAt(_selectedIndex),
+        body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
