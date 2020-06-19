@@ -192,7 +192,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               Text(
                                 newLogin == true ? 'Sign Up' : 'Login',
                                 style: TextStyle(
-                                    fontSize: 25.0, color: Colors.blue),
+                                    fontSize: 25.0, color: Theme.of(context).primaryColor,),
                               ),
                               SizedBox(
                                 height: 15.0,
@@ -213,7 +213,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     Icons.error,
                                     color: invalidEmail == true
                                         ? Colors.red
-                                        : Colors.green,
+                                        : Theme.of(context).primaryColor,
                                   ),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
@@ -240,7 +240,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                       child: Icon(
                                         Icons.remove_red_eye,
                                         color: obscurePassword == true
-                                            ? Colors.blue
+                                            ? Theme.of(context).primaryColor
                                             : Colors.green,
                                       )),
                                   prefixIcon: Icon(Icons.lock),
@@ -257,7 +257,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                       title: newLogin == true
                                           ? 'Sign up'
                                           : 'Login',
-                                      colour: Colors.blue,
+                                      colour: Theme.of(context).primaryColor,
                                       onPressed: invalidEmail == false
                                           ? () async {
                                               if (email != null &&
@@ -309,7 +309,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   : RoundedButton(
                                       title: 'Loading...',
                                       onPressed: () {},
-                                      colour: Colors.blue,
+                                      colour: Theme.of(context).buttonColor,
+                                      textColor: Theme.of(context).primaryColor,
                                     ),
                               Row(
                                 mainAxisAlignment:
@@ -332,8 +333,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   GestureDetector(
                                       onTap: () {
                                         if (email != null && email != '') {
+                                          setState(() {
+                                            showError('Email sent.');
+                                          });
                                           auth.resetPassword(email);
-                                        } else {}
+                                        } else {
+                                          showError('Please enter your email.');
+                                        }
                                       },
                                       child: Text(
                                         'Forgot password?',

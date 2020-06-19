@@ -28,7 +28,7 @@ class WelcomeCard extends StatelessWidget {
                   right: -10,
                   child: FaIcon(
                     FontAwesomeIcons.checkCircle,
-                    color: Colors.green,
+                    color: Theme.of(context).primaryColor,
                   ),
                 )
                     : Container(

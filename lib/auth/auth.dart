@@ -17,31 +17,22 @@ class Auth implements BaseAuth {
     print('signup');
     errorMessage = null;
     try {
-      print('1');
       if (warden == true) {
-        await _firebaseAuth.signInAnonymously();
+        AuthResult anSign = await _firebaseAuth.signInAnonymously();
         bool ans = await checkEmail(email);
-        print('2' + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        user = anSign.user;
+        user.delete();
         if (ans == true) {
-          print('3  @@@@@@@@@@@@@@@@@@@@@@@@@@');
-          user = await _firebaseAuth.currentUser();
-          user.delete();
           AuthResult result = await _firebaseAuth
               .createUserWithEmailAndPassword(email: email, password: password);
-          user = await _firebaseAuth.currentUser();
+          user = result.user;
           user.sendEmailVerification();
           await setAdmin(warden, email);
-          print('4 ###################');
         } else {
-          print('5 %%%%%%%%%%%%%%%%%%%%%%%');
-          user = await _firebaseAuth.currentUser();
-          user.delete();
           errorMessage = "You are not authorized.";
-          print('6 ^^^^^^^^^^^^^^^^^^^^^^^^^');
           return errorMessage;
         }
       } else {
-        print('7 &&&&&&&&&&&&&&&&&&&&&&&&&&&&');
         AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
             email: email, password: password);
         user = result.user;
@@ -49,7 +40,6 @@ class Auth implements BaseAuth {
         await setAdmin(warden, email);
       }
     } catch (error) {
-      print(')))))))))))))))))))))))))');
       print(error.code);
       switch (error.code) {
         case "ERROR_EMAIL_ALREADY_IN_USE":
@@ -83,9 +73,44 @@ class Auth implements BaseAuth {
     bool adminResult;
     errorMessage = null;
     try {
-      AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
-      user = result.user;
+      AuthResult anSign = await _firebaseAuth.signInAnonymously();
+      adminResult = await checkAdmin(email);
+      anSign.user.delete();
+      if (warden == true) {
+        if (adminResult == false) {
+          errorMessage = "You are not a warden.";
+          return errorMessage;
+        } else {
+          AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password);
+          user = result.user;
+          if (user.isEmailVerified) {
+            print('success warden');
+            return user.uid;
+          } else {
+            errorMessage = 'Email not verified.';
+            return errorMessage;
+          }
+        }
+      }
+      if (warden == false) {
+        adminResult = await checkAdmin(email);
+        if (adminResult == true) {
+          errorMessage = "You are not a student.";
+          return errorMessage;
+        } else {
+          AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+              email: email, password: password);
+          user = result.user;
+          if (user.isEmailVerified) {
+            print('success student');
+            return user.uid;
+          } else {
+            errorMessage = 'Email not verified.';
+            return errorMessage;
+          }
+        }
+      }
     } catch (error) {
       print(error.code);
       switch (error.code) {
@@ -115,29 +140,7 @@ class Auth implements BaseAuth {
       print('failure');
       return errorMessage;
     }
-    if (user.isEmailVerified) {
-      print('success');
-      if (warden == true) {
-        adminResult = await checkAdmin();
-        if (adminResult == false) {
-          await signOut();
-          errorMessage = "You are not a warden.";
-          return errorMessage;
-        }
-      }
-      if (warden == false) {
-        adminResult = await checkAdmin();
-        if (adminResult == true) {
-          await signOut();
-          errorMessage = "You are not a student.";
-          return errorMessage;
-        }
-      }
-      return user.uid;
-    } else {
-      errorMessage = 'Email not verified.';
-      return errorMessage;
-    }
+    return errorMessage;
   }
 
   @override
@@ -152,14 +155,13 @@ class Auth implements BaseAuth {
   Future<void> setAdmin(bool warden, String email) async {
     await _firestore
         .collection("profiles")
-        .document(email)
-        .setData({'email': email, 'warden': warden});
+        .add({'email': email, 'warden': warden});
   }
 
-  Future<bool> checkAdmin() async {
+  Future<bool> checkAdmin(email) async {
     final items = await _firestore.collection('profiles').getDocuments();
     for (var message in items.documents) {
-      if (message.data['email'] == user.email) {
+      if (message.data['email'] == email) {
         bool warden = message.data['warden'];
         if (warden == false) {
           return false;
