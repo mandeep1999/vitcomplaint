@@ -30,7 +30,7 @@ Widget _getLandingPage(){
   return StreamBuilder<FirebaseUser>(
     stream: FirebaseAuth.instance.onAuthStateChanged,
     builder: (BuildContext context, snapshot) {
-      if (snapshot.hasData && (!snapshot.data.isAnonymous)) {
+      if (snapshot.hasData && (!snapshot.data.isAnonymous) && snapshot.data.isEmailVerified) {
         return Home();
       }
       return WelcomeScreen();
