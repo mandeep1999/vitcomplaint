@@ -106,14 +106,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               editName == false
-                                  ? Text(
-                                      name,
-                                      style: TextStyle(fontSize: 20.0),
+                                  ? Expanded(
+                                      child: SingleChildScrollView(
+                                        child: Text(
+                                          name,
+                                          style: TextStyle(fontSize: 20.0),
+                                        ),
+                                      ),
                                     )
                                   : Container(
                                       width: 200.0,
                                       child: TextField(
-                                        style: TextStyle(color: Theme.of(context).primaryColor,),
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
                                         onChanged: (value) {
                                           name = value;
                                         },
@@ -173,8 +179,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   : Container(
                                       width: 100.0,
                                       child: DropdownButton<String>(
-                                        dropdownColor: Theme.of(context).primaryColor,
-                                        iconEnabledColor:  Theme.of(context).primaryColor,
+                                        dropdownColor:
+                                            Theme.of(context).primaryColor,
+                                        iconEnabledColor:
+                                            Theme.of(context).primaryColor,
                                         iconSize: 30.0,
                                         hint: Text(
                                           block + ' block',
@@ -186,7 +194,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         items: _blocks.map((String value) {
                                           return new DropdownMenuItem<String>(
                                             value: value,
-                                            child: new Text(value + ' block',style: TextStyle(color: Colors.white),),
+                                            child: new Text(
+                                              value + ' block',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
                                           );
                                         }).toList(),
                                         onChanged: (value) {
@@ -240,39 +252,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               editRoom == false
                                   ? Text(
-                                room,
-                                style: TextStyle(fontSize: 20.0),
-                              )
-                                  : Container(
-                                width: 200.0,
-                                child: TextField(
-                                  style: TextStyle(color: Theme.of(context).primaryColor,),
-                                  onChanged: (value) {
-                                    room = value;
-                                  },
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: 'Write your room no.'),
-                                ),
-                              ),
+                                      room,
+                                      style: TextStyle(fontSize: 20.0),
+                                    )
+                                  : Expanded(
+                                    child: SingleChildScrollView(
+                                      child: Container(
+                                          width: 200.0,
+                                          child: TextField(
+                                            style: TextStyle(
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                            onChanged: (value) {
+                                              room = value;
+                                            },
+                                            autofocus: true,
+                                            decoration: InputDecoration(
+                                                border: InputBorder.none,
+                                                hintText: 'Write your room no.'),
+                                          ),
+                                        ),
+                                    ),
+                                  ),
                               editRoom == false
                                   ? IconButton(
-                                icon: FaIcon(FontAwesomeIcons.edit),
-                                onPressed: () {
-                                  setState(() {
-                                    editRoom = true;
-                                  });
-                                },
-                              )
+                                      icon: FaIcon(FontAwesomeIcons.edit),
+                                      onPressed: () {
+                                        setState(() {
+                                          editRoom = true;
+                                        });
+                                      },
+                                    )
                                   : IconButton(
-                                icon: FaIcon(FontAwesomeIcons.save),
-                                onPressed: () {
-                                  setState(() {
-                                    editRoom = false;
-                                  });
-                                },
-                              ),
+                                      icon: FaIcon(FontAwesomeIcons.save),
+                                      onPressed: () {
+                                        setState(() {
+                                          editRoom = false;
+                                        });
+                                      },
+                                    ),
                             ],
                           ),
                         ),
