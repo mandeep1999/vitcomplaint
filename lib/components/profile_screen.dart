@@ -9,7 +9,12 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool editName = false;
+  bool editBlock = false;
+  bool editRoom = false;
   String name = 'Student name';
+  String block = 'A';
+  String room = 'Room no';
+  List<String> _blocks = ['A', 'B', 'C', 'D'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,6 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 20.0,
                         ),
                         Container(
+                          margin: EdgeInsets.symmetric(vertical: 10.0),
                           decoration: BoxDecoration(
                             border: Border.all(
                                 color: Theme.of(context).primaryColor),
@@ -107,6 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   : Container(
                                       width: 200.0,
                                       child: TextField(
+                                        style: TextStyle(color: Theme.of(context).primaryColor,),
                                         onChanged: (value) {
                                           name = value;
                                         },
@@ -133,6 +140,139 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         });
                                       },
                                     ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(
+                                    2.0, 2.0), // shadow direction: bottom right
+                              )
+                            ],
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              editBlock == false
+                                  ? Text(
+                                      block + ' block',
+                                      style: TextStyle(fontSize: 20.0),
+                                    )
+                                  : Container(
+                                      width: 100.0,
+                                      child: DropdownButton<String>(
+                                        dropdownColor: Theme.of(context).primaryColor,
+                                        iconEnabledColor:  Theme.of(context).primaryColor,
+                                        iconSize: 30.0,
+                                        hint: Text(
+                                          block + ' block',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontSize: 20.0),
+                                        ),
+                                        items: _blocks.map((String value) {
+                                          return new DropdownMenuItem<String>(
+                                            value: value,
+                                            child: new Text(value + ' block',style: TextStyle(color: Colors.white),),
+                                          );
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            block = value;
+                                            editBlock = false;
+                                          });
+                                        },
+                                      )),
+                              editBlock == false
+                                  ? IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.edit),
+                                      onPressed: () {
+                                        setState(() {
+                                          editBlock = true;
+                                        });
+                                      },
+                                    )
+                                  : IconButton(
+                                      icon: FaIcon(FontAwesomeIcons.save),
+                                      onPressed: () {
+                                        setState(() {
+                                          editBlock = false;
+                                        });
+                                      },
+                                    ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).primaryColor),
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(
+                                    2.0, 2.0), // shadow direction: bottom right
+                              )
+                            ],
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              editRoom == false
+                                  ? Text(
+                                room,
+                                style: TextStyle(fontSize: 20.0),
+                              )
+                                  : Container(
+                                width: 200.0,
+                                child: TextField(
+                                  style: TextStyle(color: Theme.of(context).primaryColor,),
+                                  onChanged: (value) {
+                                    room = value;
+                                  },
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Write your room no.'),
+                                ),
+                              ),
+                              editRoom == false
+                                  ? IconButton(
+                                icon: FaIcon(FontAwesomeIcons.edit),
+                                onPressed: () {
+                                  setState(() {
+                                    editRoom = true;
+                                  });
+                                },
+                              )
+                                  : IconButton(
+                                icon: FaIcon(FontAwesomeIcons.save),
+                                onPressed: () {
+                                  setState(() {
+                                    editRoom = false;
+                                  });
+                                },
+                              ),
                             ],
                           ),
                         ),
