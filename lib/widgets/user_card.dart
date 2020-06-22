@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'user_avatar.dart';
 
 class UserCard extends StatelessWidget {
-  final String imageURL;
-  UserCard({this.imageURL});
+  final String imageURL, name, block;
+  UserCard(
+      {@required this.imageURL, @required this.block, @required this.name});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,13 +22,40 @@ class UserCard extends StatelessWidget {
           )
         ],
       ),
-      padding: EdgeInsets.all(8.0),
-      child: Row(
+      child: Column(
         children: [
-          UserAvatar(imageURL: imageURL),
+          Row(
+            children: [
+              UserAvatar(imageURL: imageURL),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 22.0),
+                    ),
+                    Text(
+                      block + ' block',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 30.0,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(9.0),
+                  bottomRight: Radius.circular(9.0)),
+            ),
+          ),
         ],
       ),
     );
   }
 }
-

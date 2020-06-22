@@ -6,7 +6,7 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10.0),
+      margin: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10.0,top: 10.0),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         boxShadow: [

@@ -67,7 +67,7 @@ class _UserScreenState extends State<UserScreen> {
                     Expanded(
                       child: ListView(
                         children: [
-                          UserCard(imageURL: 'https://picsum.photos/250?image=1',),
+                          UserCard(imageURL: 'https://picsum.photos/250?image=1',name: 'Mandeep Singh',block: 'A',),
                         ],
                       ),
                     ),
