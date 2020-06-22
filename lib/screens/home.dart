@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:vitcomplaint/components/user_screen.dart';
 import 'package:vitcomplaint/components/home_screen.dart';
 import 'package:vitcomplaint/components/profile_screen.dart';
+import 'package:vitcomplaint/provider/firebase_work.dart';
 
 class Home extends StatefulWidget {
   static final String id = 'home';
@@ -21,6 +23,13 @@ class _HomeState extends State<Home> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<FirebaseWork>(context,listen: false).getUser();
   }
 
   @override

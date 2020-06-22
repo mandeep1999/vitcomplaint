@@ -16,6 +16,7 @@ class FirebaseWork extends ChangeNotifier {
     user = await _firebaseAuth.currentUser();
     if (user != null) {
       uid = user.uid;
+      await getProfile();
       return true;
     }
     return false;
@@ -34,23 +35,24 @@ class FirebaseWork extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setProfile(String name, String url, int block) async {
+  Future<void> setProfile(String name, String url, String block) async {
     await _firestore
         .collection('profiles')
         .document(uid)
-        .updateData({'name': name, 'url': url, 'block': block});
+        .setData({'name': name, 'url': url, 'block': block});
+    await getProfile();
   }
 
-  Future<String> getURL(File _image) async {
+  Future<void> getURL(File _image) async {
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child('pictures/profiles/$uid');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
     await storageReference.getDownloadURL().then((fileURL) {
-      return fileURL;
+      print(fileURL);
+      setProfile(userName, fileURL, block);
     });
-    return 'error while uploading';
   }
 
   Future<String> getComplaintURL(File _image, String id) async {

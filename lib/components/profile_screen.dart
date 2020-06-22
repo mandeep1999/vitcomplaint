@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:vitcomplaint/provider/firebase_work.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -11,12 +15,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool editName = false;
   bool editBlock = false;
   bool editRoom = false;
-  String name = 'Student name';
-  String block = 'A';
-  String room = 'Room no';
-  List<String> _blocks = ['A', 'B', 'C', 'D'];
+  File _image;
   @override
   Widget build(BuildContext context) {
+    String name = Provider.of<FirebaseWork>(context).userName;
+    String block =Provider.of<FirebaseWork>(context).block;
+    String room = 'Room no';
+    String url = Provider.of<FirebaseWork>(context).url;
+
+    List<String> _blocks = ['A', 'B', 'C', 'D'];
+    final picker = ImagePicker();
+
+    Future getImage() async {
+      final pickedFile = await picker.getImage(
+        source: ImageSource.gallery,
+      );
+      _image = File(pickedFile.path);
+    }
+    Future<void> submit()async{
+      print([block,name,]);
+      await Provider.of<FirebaseWork>(context,listen: false).setProfile(name, url, block);
+      print('submit');
+    }
+
     return Container(
       child: Column(
         children: [
@@ -70,13 +91,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Theme.of(context).primaryColor,
                                     child: CircleAvatar(
                                       radius: 80.0,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/student.png'),
+                                      backgroundImage:
+                                          url ==
+                                                  null
+                                              ? AssetImage(
+                                                  'assets/images/student.png')
+                                              : NetworkImage(
+                                                  url),
                                     ))),
                             Positioned(
-                              top: 130.0,
-                              left: 130.0,
-                              child: FaIcon(FontAwesomeIcons.userEdit),
+                              top: 120.0,
+                              left: 120.0,
+                              child: IconButton(
+                                onPressed: () async {
+                                  await getImage();
+                                  if (_image != null) {
+                                     await Provider.of<FirebaseWork>(
+                                            context,
+                                            listen: false)
+                                        .getURL(_image);
+                                  }
+                                },
+                                icon: FaIcon(FontAwesomeIcons.userEdit),
+                              ),
                             ),
                           ],
                         ),
@@ -140,7 +177,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     )
                                   : IconButton(
                                       icon: FaIcon(FontAwesomeIcons.save),
-                                      onPressed: () {
+                                      onPressed: () async{
+                                        await submit();
                                         setState(() {
                                           editName = false;
                                         });
@@ -201,11 +239,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           );
                                         }).toList(),
-                                        onChanged: (value) {
+                                        onChanged: (value)
+                                        async{
                                           setState(() {
                                             block = value;
                                             editBlock = false;
                                           });
+                                          await submit();
                                         },
                                       )),
                               editBlock == false
@@ -219,7 +259,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     )
                                   : IconButton(
                                       icon: FaIcon(FontAwesomeIcons.save),
-                                      onPressed: () {
+                                      onPressed: () async{
+                                        await submit();
                                         setState(() {
                                           editBlock = false;
                                         });
@@ -256,12 +297,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       style: TextStyle(fontSize: 20.0),
                                     )
                                   : Expanded(
-                                    child: SingleChildScrollView(
-                                      child: Container(
+                                      child: SingleChildScrollView(
+                                        child: Container(
                                           width: 200.0,
                                           child: TextField(
                                             style: TextStyle(
-                                              color: Theme.of(context).primaryColor,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                             ),
                                             onChanged: (value) {
                                               room = value;
@@ -269,11 +311,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             autofocus: true,
                                             decoration: InputDecoration(
                                                 border: InputBorder.none,
-                                                hintText: 'Write your room no.'),
+                                                hintText:
+                                                    'Write your room no.'),
                                           ),
                                         ),
+                                      ),
                                     ),
-                                  ),
                               editRoom == false
                                   ? IconButton(
                                       icon: FaIcon(FontAwesomeIcons.edit),

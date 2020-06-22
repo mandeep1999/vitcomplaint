@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'user_avatar.dart';
 
 class UserCard extends StatelessWidget {
@@ -45,7 +46,23 @@ class UserCard extends StatelessWidget {
             ],
           ),
           Container(
-            height: 30.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Add',
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
+                IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.plus,
+                    color: Colors.white,
+                    size: 18.0,
+                  ),
+                )
+              ],
+            ),
+            height: 40.0,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,

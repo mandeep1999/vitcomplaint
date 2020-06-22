@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vitcomplaint/provider/firebase_work.dart';
 import 'package:vitcomplaint/theme/themes.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 void main() {
   runApp(
-    ChangeNotifierProvider<ThemeNotifier>(create: (context) => ThemeNotifier(lightTheme),child: MyApp(),),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier(lightTheme)),
+          ChangeNotifierProvider<FirebaseWork>(create: (_) => FirebaseWork()),
+        ],
+        child: MyApp(),
+      )
   );
 }
 

@@ -4,10 +4,10 @@ final darkTheme = ThemeData.dark().copyWith(primaryColor: Colors.white,buttonThe
 
 final lightTheme = ThemeData(
   primarySwatch: Colors.grey,
-  primaryColor: Color(0xff3e51b5),
+  primaryColor: Colors.indigo,
   brightness: Brightness.light,
   backgroundColor: const Color(0xFFE5E5E5),
-  textTheme: TextTheme(bodyText2: TextStyle(color: Color(0xff3e51b5))),
+  textTheme: TextTheme(bodyText2: TextStyle(color: Colors.indigo)),
   accentColor: Colors.black,
   accentIconTheme: IconThemeData(color: Colors.red),
   iconTheme: IconThemeData(color: Color(0xff3e51b5)),
