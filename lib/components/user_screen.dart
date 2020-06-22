@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vitcomplaint/widgets/user_card.dart';
 
 class UserScreen extends StatefulWidget {
   @override
@@ -7,13 +7,6 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  bool editName = false;
-  bool editBlock = false;
-  bool editRoom = false;
-  String name = 'Student name';
-  String block = 'A';
-  String room = 'Room no';
-  List<String> _blocks = ['A', 'B', 'C', 'D'];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,7 +27,7 @@ class _UserScreenState extends State<UserScreen> {
             child: Container(
               color: Theme.of(context).primaryColor,
               child: Container(
-                padding: EdgeInsets.only(top: 20.0, right: 20.0,left: 20.0),
+                padding: EdgeInsets.only(top: 20.0, right: 20.0, left: 20.0),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -68,10 +61,14 @@ class _UserScreenState extends State<UserScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 15.0,),
+                    SizedBox(
+                      height: 15.0,
+                    ),
                     Expanded(
                       child: ListView(
-                        children: [Text('hi')],
+                        children: [
+                          UserCard(imageURL: 'https://picsum.photos/250?image=1',),
+                        ],
                       ),
                     ),
                   ],
@@ -84,3 +81,5 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 }
+
+
