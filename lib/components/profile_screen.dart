@@ -21,9 +21,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    String name = Provider.of<FirebaseWork>(context).userName;
-    String block = Provider.of<FirebaseWork>(context).block;
-    String room = 'Room no';
+    String name = Provider.of<FirebaseWork>(context).userName == null ? 'name' : Provider.of<FirebaseWork>(context).userName;
+    String block = Provider.of<FirebaseWork>(context).block == null ? 'null' :Provider.of<FirebaseWork>(context).block ;
+    String room =  Provider.of<FirebaseWork>(context).room == null ?  'Room no' :Provider.of<FirebaseWork>(context).room;
     String url = Provider.of<FirebaseWork>(context).url;
 
     List<String> _blocks = ['A', 'B', 'C', 'D'];
@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         loading = true;
       });
       await Provider.of<FirebaseWork>(context, listen: false)
-          .setProfile(name, url, block);
+          .setProfile(name, url, block, room);
       setState(() {
         loading = false;
       });
@@ -226,7 +226,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             style: TextStyle(fontSize: 20.0),
                                           )
                                         : Container(
-                                            width: 100.0,
+                                            width: 150.0,
                                             child: DropdownButton<String>(
                                               dropdownColor: Theme.of(context)
                                                   .primaryColor,
@@ -342,7 +342,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           )
                                         : IconButton(
                                             icon: FaIcon(FontAwesomeIcons.save),
-                                            onPressed: () {
+                                            onPressed: ()async {
+                                              await submit();
                                               setState(() {
                                                 editRoom = false;
                                               });

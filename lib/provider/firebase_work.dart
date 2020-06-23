@@ -12,6 +12,7 @@ class FirebaseWork extends ChangeNotifier {
   String email, userName, url;
   bool warden;
   String block;
+  String room;
   Future<bool> getUser() async {
     user = await _firebaseAuth.currentUser();
     if (user != null) {
@@ -30,16 +31,17 @@ class FirebaseWork extends ChangeNotifier {
         url = message.data['url'];
         warden = message.data['warden'];
         block = message.data['block'];
+        room = message.data['room'];
       }
     }
     notifyListeners();
   }
 
-  Future<void> setProfile(String name, String url, String block) async {
+  Future<void> setProfile(String name, String url, String block, String room) async {
     await _firestore
         .collection('profiles')
         .document(uid)
-        .setData({'name': name, 'url': url, 'block': block});
+        .setData({'name': name, 'url': url, 'block': block, 'room' : room});
     await getProfile();
   }
 
@@ -51,7 +53,7 @@ class FirebaseWork extends ChangeNotifier {
     print('File Uploaded');
     await storageReference.getDownloadURL().then((fileURL) {
       print(fileURL);
-      setProfile(userName, fileURL, block);
+      setProfile(userName, fileURL, block, room);
     });
   }
 
@@ -89,5 +91,13 @@ class FirebaseWork extends ChangeNotifier {
       'name': name,
       'block': block
     });
+  }
+  Future<void> acceptRequest(String senderID, String receiverID)async{
+    await _firestore.collection('roommates').document(receiverID).setData({'roommates' : FieldValue.arrayUnion([senderID])});
+    await _firestore.collection('roommates').document(senderID).setData({'roommates' : FieldValue.arrayUnion([receiverID])});
+    await _firestore.collection('requests').document(senderID+receiverID).delete();
+  }
+  Future<void> rejectRequest(String senderID, String receiverID)async{
+    await _firestore.collection('requests').document(senderID+receiverID).delete();
   }
 }

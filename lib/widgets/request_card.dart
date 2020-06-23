@@ -1,28 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
 import 'user_avatar.dart';
 import 'package:provider/provider.dart';
 
-class UserCard extends StatefulWidget {
-
-  final String imageURL, name, block, id;
-  UserCard(
-      {@required this.imageURL, @required this.block, @required this.name, @required this.id});
+class RequestCard extends StatefulWidget {
+  final String imageURL, name, block, senderID, receiverID;
+  RequestCard(
+      {@required this.imageURL,
+      @required this.block,
+      @required this.name,
+      @required this.senderID,
+      @required this.receiverID});
 
   @override
-  _UserCardState createState() => _UserCardState();
+  _RequestCardState createState() => _RequestCardState();
 }
 
-class _UserCardState extends State<UserCard> {
-
-  bool loading = false,sent = false;
+class _RequestCardState extends State<RequestCard> {
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      margin: EdgeInsets.only(bottom : 10.0),
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).primaryColor),
         borderRadius: BorderRadius.circular(10.0),
@@ -62,27 +60,30 @@ class _UserCardState extends State<UserCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  sent == false ? 'Add' : 'Sent',
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
-                ),
-               loading == false ? IconButton(
-                  onPressed: sent == false ? ()async{
-                    setState(() {
-                      loading = true;
-                    });
-                    await Provider.of<FirebaseWork>(context,listen: false).sendRequest(Provider.of<FirebaseWork>(context,listen: false).uid, widget.id, widget.name, widget.block);
-                    setState(() {
-                      loading = false;
-                      sent = true;
-                    });
-                  } :() {},
-                  icon: FaIcon(
-                    sent == false ? FontAwesomeIcons.plus: FontAwesomeIcons.checkCircle,
-                    color: Colors.white,
-                    size: 18.0,
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {
+                      Provider.of<FirebaseWork>(context, listen: false)
+                          .acceptRequest(widget.senderID, widget.receiverID);
+                    },
+                    child: Text(
+                      'Accept',
+                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                    ),
                   ),
-                ) : IconButton(icon: FaIcon(FontAwesomeIcons.arrowAltCircleUp,color: Colors.white,size: 18.0,)),
+                ),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {
+                      Provider.of<FirebaseWork>(context, listen: false)
+                          .rejectRequest(widget.senderID, widget.receiverID);
+                    },
+                    child: Text(
+                      'Reject',
+                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                    ),
+                  ),
+                ),
               ],
             ),
             height: 40.0,

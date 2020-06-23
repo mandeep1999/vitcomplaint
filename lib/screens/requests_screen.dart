@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'package:vitcomplaint/widgets/user_card.dart';
+import 'package:vitcomplaint/widgets/request_card.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
 
 class RequestsScreen extends StatefulWidget {
@@ -52,7 +52,7 @@ class UserStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore.collection('requests').snapshots(),
       builder: (context, snapshot) {
-        List<UserCard> messageBubbles = [];
+        List<RequestCard> requestBubbles = [];
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(
@@ -69,20 +69,20 @@ class UserStream extends StatelessWidget {
           final receiverID = message.data['receiverID'];
           if (receiverID != null && senderID != null) {
             if (receiverID == Provider.of<FirebaseWork>(context).uid) {
-            } else {
-              final messageBubble = UserCard(
+
+              final requestBubble = RequestCard(
                 imageURL: imageURL,
                 name: name,
                 block: block,
-                id: senderID,
+                senderID: senderID,
+                receiverID : receiverID,
               );
-              messageBubbles.add(messageBubble);
-            }
-          }
+              requestBubbles.add(requestBubble);
+          }}
         }
         return ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-          children: messageBubbles.isEmpty
+          children: requestBubbles.isEmpty
               ? <Widget>[
                   Center(
                       child: Text(
@@ -96,10 +96,10 @@ class UserStream extends StatelessWidget {
                     height: 40.0,
                   ),
                   Center(
-                    child: Image.asset('assets/images/student.png'),
+                    child: Image.asset('assets/images/nothing.jpg',height: 300.0,),
                   ),
                 ]
-              : messageBubbles,
+              : requestBubbles,
         );
       },
     );

@@ -149,7 +149,7 @@ class UserStream extends StatelessWidget {
                     height: 40.0,
                   ),
                   Center(
-                    child: Image.asset('assets/images/student.png'),
+                    child: Image.asset('assets/images/nothing.jpg'),
                   ),
                 ]
               : messageBubbles,
