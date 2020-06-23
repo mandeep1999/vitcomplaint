@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
+import 'package:vitcomplaint/screens/requests_screen.dart';
 import 'package:vitcomplaint/widgets/user_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,12 +21,25 @@ class _UserScreenState extends State<UserScreen> {
           Container(
             height: 75.0,
             width: double.infinity,
-            padding: EdgeInsets.only(top: 10.0, left: 20.0),
+            padding: EdgeInsets.only(top: 10.0, left: 10.0),
             color: Theme.of(context).primaryColor,
-            child: Text(
-              'Search',
-              style: TextStyle(
-                  fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
+            child: ListTile(
+              leading: Text(
+                'Search',
+                style: TextStyle(
+                    fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
+              ),
+              trailing: IconButton(icon: FaIcon( FontAwesomeIcons.receipt,color: Colors.white,size: 20.0,),onPressed: (){
+                showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: RequestsScreen(),
+                        )));
+              },),
             ),
           ),
           Expanded(
@@ -113,6 +128,7 @@ class UserStream extends StatelessWidget {
               imageURL : imageURL,
               name: name,
               block: block,
+              id: id,
             );
             messageBubbles.add(messageBubble);
           }}

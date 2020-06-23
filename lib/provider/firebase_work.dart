@@ -77,4 +77,17 @@ class FirebaseWork extends ChangeNotifier {
       'url': complaintUrl
     });
   }
+
+  Future<void> sendRequest(
+      String senderID, String receiverID, String name, String block) async {
+    await _firestore
+        .collection('requests')
+        .document(senderID + receiverID)
+        .setData({
+      'senderID': senderID,
+      'receiverID': receiverID,
+      'name': name,
+      'block': block
+    });
+  }
 }
