@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final darkTheme = ThemeData.dark().copyWith(primaryColor: Colors.white,buttonTheme: ButtonThemeData(buttonColor: Colors.black));
+final darkTheme = ThemeData.dark().copyWith(primaryColor: Colors.black, textTheme: TextTheme(bodyText2: TextStyle(color: Colors.grey)),buttonTheme: ButtonThemeData(buttonColor: Colors.black));
 
 final lightTheme = ThemeData(
   primarySwatch: Colors.grey,

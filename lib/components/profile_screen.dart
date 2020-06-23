@@ -315,6 +315,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               child: Container(
                                                 width: 200.0,
                                                 child: TextField(
+                                                  keyboardType: TextInputType.number,
                                                   style: TextStyle(
                                                     color: Theme.of(context)
                                                         .primaryColor,

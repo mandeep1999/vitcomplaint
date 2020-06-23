@@ -58,19 +58,22 @@ class FirebaseWork extends ChangeNotifier {
   }
 
   Future<String> getComplaintURL(File _image, String id) async {
+    String url;
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('pictures/complaints/$uid/$id');
+    FirebaseStorage.instance.ref().child('pictures/complaints/$uid/$id');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
     await storageReference.getDownloadURL().then((fileURL) {
+      url = fileURL;
       return fileURL;
     });
-    return 'error while uploading';
+    return url;
   }
 
-  Future<void> setComplaint(String id, String complaint, int status,
-      int priority, String complaintUrl) async {
+  Future<void> setComplaint(String id, String complaint, String status,
+      String priority, String complaintUrl) async {
+    print('submit');
     await _firestore.collection(block).document(id).setData({
       'user': uid,
       'complaint': complaint,

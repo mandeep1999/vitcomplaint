@@ -21,6 +21,7 @@ class _RequestCardState extends State<RequestCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).primaryColor),
         borderRadius: BorderRadius.circular(10.0),

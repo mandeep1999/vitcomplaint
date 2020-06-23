@@ -11,8 +11,17 @@ class UserScreen extends StatefulWidget {
   @override
   _UserScreenState createState() => _UserScreenState();
 }
-
+String search = '';
+List<UserCard> messageBubbles = [];
 class _UserScreenState extends State<UserScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    search = '';
+    messageBubbles = [];
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -65,6 +74,13 @@ class _UserScreenState extends State<UserScreen> {
                       height: 15.0,
                     ),
                     TextField(
+                      onChanged: (value){
+                        setState(() {
+                          search = value;
+                          messageBubbles = [];
+                        });
+
+                      },
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         hintText: 'Search here',
@@ -122,8 +138,11 @@ class UserStream extends StatelessWidget {
           final currentUser = Provider.of<FirebaseWork>(context).uid;
           if(name != null && name != ''){
           if (currentUser == id){
-
           } else{
+            bool searchBool = search != '' ? true : false;
+            if(searchBool == true
+                ? name.toLowerCase().startsWith(search.toLowerCase())
+                : true){
             final messageBubble = UserCard(
               imageURL : imageURL,
               name: name,
@@ -131,7 +150,7 @@ class UserStream extends StatelessWidget {
               id: id,
             );
             messageBubbles.add(messageBubble);
-          }}
+          }}}
         }
         return ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
