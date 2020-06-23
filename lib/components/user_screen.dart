@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vitcomplaint/provider/firebase_work.dart';
 import 'package:vitcomplaint/widgets/user_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class UserScreen extends StatefulWidget {
   @override
@@ -65,11 +69,7 @@ class _UserScreenState extends State<UserScreen> {
                       height: 15.0,
                     ),
                     Expanded(
-                      child: ListView(
-                        children: [
-                          UserCard(imageURL: 'https://picsum.photos/250?image=1',name: 'Mandeep Singh',block: 'A',),
-                        ],
-                      ),
+                      child: UserStream(),
                     ),
                   ],
                 ),
@@ -82,4 +82,64 @@ class _UserScreenState extends State<UserScreen> {
   }
 }
 
+class UserStream extends StatelessWidget {
+  final _firestore = Firestore.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.collection('profiles').snapshots(),
+      builder: (context, snapshot) {
+        List<UserCard> messageBubbles = [];
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+          );
+        }
+        final messages = snapshot.data.documents;
+        for (var message in messages) {
+          final block = message.data['block'];
+          final name = message.data['name'];
+          final imageURL = message.data['url'];
+          final id = message.documentID;
+          final currentUser = Provider.of<FirebaseWork>(context).uid;
+          if(name != null && name != ''){
+          if (currentUser == id){
+
+          } else{
+            final messageBubble = UserCard(
+              imageURL : imageURL,
+              name: name,
+              block: block,
+            );
+            messageBubbles.add(messageBubble);
+          }}
+        }
+        return ListView(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+          children: messageBubbles.isEmpty
+              ? <Widget>[
+                  Center(
+                      child: Text(
+                    'Nothing here yet.',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  )),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  Center(
+                    child: Image.asset('assets/images/student.png'),
+                  ),
+                ]
+              : messageBubbles,
+        );
+      },
+    );
+  }
+}
 

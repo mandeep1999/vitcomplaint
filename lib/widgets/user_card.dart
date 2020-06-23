@@ -4,9 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'user_avatar.dart';
 
 class UserCard extends StatelessWidget {
-  final String imageURL, name, block;
+  final String imageURL, name, block, id;
   UserCard(
-      {@required this.imageURL, @required this.block, @required this.name});
+      {@required this.imageURL, @required this.block, @required this.name, @required this.id});
   @override
   Widget build(BuildContext context) {
     return Container(

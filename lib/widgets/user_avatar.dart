@@ -6,7 +6,7 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10.0,top: 10.0),
+      margin: EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0, top: 10.0),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         boxShadow: [
@@ -18,15 +18,18 @@ class UserAvatar extends StatelessWidget {
           )
         ],
         border: Border.all(color: Theme.of(context).primaryColor),
-        borderRadius: BorderRadius.all(Radius.circular(42.0)),
+        borderRadius: BorderRadius.all(Radius.circular(45.0)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(42.0)),
+        borderRadius: BorderRadius.all(Radius.circular(45.0)),
         child: FadeInImage.assetNetwork(
           placeholderScale: 10.8,
-          imageScale: 3.0,
+          imageCacheHeight: 85,
+          imageCacheWidth: 85,
           placeholder: 'assets/images/student.png',
-          image: imageURL,
+          image: imageURL != null
+              ? imageURL
+              : 'https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
         ),
       ),
     );
