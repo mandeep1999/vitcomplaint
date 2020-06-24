@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 String search = '';
 List<ComplaintCard> messageBubbles = [];
+List<dynamic> roommates;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -129,6 +130,7 @@ class UserStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String blockValue = Provider.of<FirebaseWork>(context).block;
+    roommates = Provider.of<FirebaseWork>(context).roommates;
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('complaints/$blockValue/complaints')
@@ -155,28 +157,34 @@ class UserStream extends StatelessWidget {
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
           if (name != null && name != '') {
-            if (currentUser == user) {
-              bool searchBool = search != '' ? true : false;
-              if (searchBool == true
-                  ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
-                      complaint
-                          .toLowerCase()
-                          .startsWith(search.toLowerCase()) ||
-                      status.toLowerCase().startsWith(search.toLowerCase()) ||
-                      priority.toLowerCase().startsWith(search.toLowerCase()) ||
-                      name.toLowerCase().startsWith(search.toLowerCase()))
-                  : true) {
-                final messageBubble = ComplaintCard(
-                  imageURL: imageURL,
-                  name: name,
-                  block: block,
-                  complaint: complaint,
-                  complaintID: id,
-                  priority: priority,
-                  type: type,
-                  status: status,
-                );
-                messageBubbles.add(messageBubble);
+            for (String i in roommates) {
+              if (i.toLowerCase() == user || currentUser == user) {
+                print([i.toLowerCase(),user]);
+                bool searchBool = search != '' ? true : false;
+                if (searchBool == true
+                    ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
+                        complaint
+                            .toLowerCase()
+                            .startsWith(search.toLowerCase()) ||
+                        status.toLowerCase().startsWith(search.toLowerCase()) ||
+                        priority
+                            .toLowerCase()
+                            .startsWith(search.toLowerCase()) ||
+                        name.toLowerCase().startsWith(search.toLowerCase()))
+                    : true) {
+                  final messageBubble = ComplaintCard(
+                    imageURL: imageURL,
+                    name: name,
+                    block: block,
+                    complaint: complaint,
+                    complaintID: id,
+                    priority: priority,
+                    type: type,
+                    status: status,
+                  );
+                  messageBubbles.add(messageBubble);
+                }
+                break;
               }
             }
           }

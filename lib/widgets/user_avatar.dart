@@ -29,7 +29,7 @@ class UserAvatar extends StatelessWidget {
           placeholder: 'assets/images/student.png',
           image: imageURL != null
               ? imageURL
-              : 'https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
+              : 'https://images.unsplash.com/photo-1512641406448-6574e777bec6?ixlib=rb-1.2.1&w=1000&q=80',
         ),
       ),
     );

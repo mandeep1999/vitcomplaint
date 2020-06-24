@@ -13,11 +13,13 @@ class FirebaseWork extends ChangeNotifier {
   bool warden;
   String block;
   String room;
+  List<dynamic> roommates;
   Future<bool> getUser() async {
     user = await _firebaseAuth.currentUser();
     if (user != null) {
       uid = user.uid;
       await getProfile();
+      await getRoommates();
       return true;
     }
     return false;
@@ -109,5 +111,14 @@ class FirebaseWork extends ChangeNotifier {
   }
   Future<void> rejectRequest(String senderID, String receiverID)async{
     await _firestore.collection('requests').document(senderID+receiverID).delete();
+  }
+  Future<void> getRoommates() async {
+    final items = await _firestore.collection('roommates').getDocuments();
+    for (var message in items.documents) {
+      if (message.documentID == uid) {
+        roommates = message.data['roommates'];
+      }
+    }
+    notifyListeners();
   }
 }
