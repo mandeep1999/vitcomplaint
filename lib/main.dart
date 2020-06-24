@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
+import 'package:vitcomplaint/screens/loading_screen.dart';
 import 'package:vitcomplaint/theme/themes.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/home.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       routes: {
         WelcomeScreen.id : (context) => WelcomeScreen(),
         Home.id : (context) => Home(),
+        LoadingScreen.id : (context) => LoadingScreen(),
       },
     );
   }
@@ -38,7 +40,7 @@ Widget _getLandingPage(){
     stream: FirebaseAuth.instance.onAuthStateChanged,
     builder: (BuildContext context, snapshot) {
       if (snapshot.hasData && (!snapshot.data.isAnonymous) && snapshot.data.isEmailVerified) {
-        return Home();
+        return LoadingScreen();
       }
       return WelcomeScreen();
     },

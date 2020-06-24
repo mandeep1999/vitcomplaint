@@ -6,6 +6,7 @@ import 'package:vitcomplaint/screens/add_screen.dart';
 import 'package:vitcomplaint/widgets/complaint_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     search = '';
     messageBubbles = [];
-    Provider.of<FirebaseWork>(context,listen: false).getRoommates();
+    Provider.of<FirebaseWork>(context, listen: false).getRoommates();
   }
 
   @override
@@ -112,12 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 15.0,
                     ),
                     Expanded(
-                      child: Provider.of<FirebaseWork>(context).roommates != null ? UserStream() :  Center(
-                        child: SpinKitCubeGrid(
-                          color: Theme.of(context).primaryColor,
-                          size: 50.0,
-                        ),
-                      ),
+                      child: UserStream(),
                     ),
                   ],
                 ),
@@ -162,35 +158,62 @@ class UserStream extends StatelessWidget {
           final user = message.data['user'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
+          bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
-            for (String i in roommates) {
-              if (i.toLowerCase() == user || currentUser == user) {
-                print([i.toLowerCase(),user]);
-                bool searchBool = search != '' ? true : false;
-                if (searchBool == true
-                    ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
-                        complaint
-                            .toLowerCase()
-                            .startsWith(search.toLowerCase()) ||
-                        status.toLowerCase().startsWith(search.toLowerCase()) ||
-                        priority
-                            .toLowerCase()
-                            .startsWith(search.toLowerCase()) ||
-                        name.toLowerCase().startsWith(search.toLowerCase()))
-                    : true) {
-                  final messageBubble = ComplaintCard(
-                    imageURL: imageURL,
-                    name: name,
-                    block: block,
-                    complaint: complaint,
-                    complaintID: id,
-                    priority: priority,
-                    type: type,
-                    status: status,
-                  );
-                  messageBubbles.add(messageBubble);
+            if (roommates == null) {
+              if (searchBool == true
+                  ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
+                      complaint
+                          .toLowerCase()
+                          .startsWith(search.toLowerCase()) ||
+                      status.toLowerCase().startsWith(search.toLowerCase()) ||
+                      priority.toLowerCase().startsWith(search.toLowerCase()) ||
+                      name.toLowerCase().startsWith(search.toLowerCase()))
+                  : true) {
+                final messageBubble = ComplaintCard(
+                  imageURL: imageURL,
+                  name: name,
+                  block: block,
+                  complaint: complaint,
+                  complaintID: id,
+                  priority: priority,
+                  type: type,
+                  status: status,
+                );
+                messageBubbles.add(messageBubble);
+              }
+            } else {
+              for (String i in roommates) {
+                if (i.toLowerCase() == user || currentUser == user) {
+                  print([i.toLowerCase(), user]);
+
+                  if (searchBool == true
+                      ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
+                          complaint
+                              .toLowerCase()
+                              .startsWith(search.toLowerCase()) ||
+                          status
+                              .toLowerCase()
+                              .startsWith(search.toLowerCase()) ||
+                          priority
+                              .toLowerCase()
+                              .startsWith(search.toLowerCase()) ||
+                          name.toLowerCase().startsWith(search.toLowerCase()))
+                      : true) {
+                    final messageBubble = ComplaintCard(
+                      imageURL: imageURL,
+                      name: name,
+                      block: block,
+                      complaint: complaint,
+                      complaintID: id,
+                      priority: priority,
+                      type: type,
+                      status: status,
+                    );
+                    messageBubbles.add(messageBubble);
+                  }
+                  break;
                 }
-                break;
               }
             }
           }
@@ -211,7 +234,13 @@ class UserStream extends StatelessWidget {
                     height: 40.0,
                   ),
                   Center(
-                    child: Image.asset('assets/images/nothing.jpg'),
+                    child: Provider.of<FirebaseWork>(context).block != null
+                        ? Image.asset('assets/images/nothing.jpg')
+                        : Text(
+                            'Set up your profile first.',
+                            style: TextStyle(
+                                fontSize: 30.0, fontFamily: 'Pacifico'),
+                          ),
                   ),
                 ]
               : messageBubbles,

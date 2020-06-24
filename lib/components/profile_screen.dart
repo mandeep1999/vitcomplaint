@@ -6,6 +6,7 @@ import 'package:vitcomplaint/provider/firebase_work.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:vitcomplaint/screens/welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -67,12 +68,18 @@ class _ProfileScreenState extends State<ProfileScreen>
           Container(
             height: 75.0,
             width: double.infinity,
-            padding: EdgeInsets.only(top: 10.0, left: 20.0),
+            padding: EdgeInsets.only(top: 10.0,left: 5.0),
             color: Theme.of(context).primaryColor,
-            child: Text(
-              'Profile',
-              style: TextStyle(
-                  fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
+            child: ListTile(
+              leading: Text(
+                'Profile',
+                style: TextStyle(
+                    fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
+              ),
+              trailing: IconButton(icon: FaIcon(FontAwesomeIcons.signOutAlt,color: Colors.white,),onPressed: ()async{
+                await Provider.of<FirebaseWork>(context,listen: false).signOut();
+                Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.id, (route) => false);
+              },),
             ),
           ),
           Expanded(

@@ -121,4 +121,8 @@ class FirebaseWork extends ChangeNotifier {
     }
     notifyListeners();
   }
+  Future<void> signOut()async{
+    uid = null;
+    await _firebaseAuth.signOut();
+  }
 }

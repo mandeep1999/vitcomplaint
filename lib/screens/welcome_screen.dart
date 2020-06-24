@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vitcomplaint/screens/loading_screen.dart';
 import 'package:vitcomplaint/widgets/welcome_card.dart';
 import 'package:vitcomplaint/widgets/rounded_button.dart';
 import 'package:vitcomplaint/auth/auth.dart';
@@ -192,7 +193,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               Text(
                                 newLogin == true ? 'Sign Up' : 'Login',
                                 style: TextStyle(
-                                    fontSize: 25.0, color: Theme.of(context).primaryColor,),
+                                  fontSize: 25.0,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 15.0,
@@ -289,6 +292,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                                     print(
                                                         'welcome screen sign in');
                                                     showError(errorMessage);
+                                                  }
+                                                  else{
+                                                    Navigator.pushNamedAndRemoveUntil(context, LoadingScreen.id, (route) => false);
                                                   }
                                                 }
                                                 setState(() {
