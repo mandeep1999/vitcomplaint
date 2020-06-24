@@ -13,7 +13,7 @@ class AddScreen extends StatefulWidget {
 
 final picker = ImagePicker();
 File _image;
-String complaintId, complaint, status = 'Pending', priority;
+String complaintId, complaint, status = 'Pending', priority,type;
 bool loading = false;
 
 class _AddScreenState extends State<AddScreen> {
@@ -31,7 +31,7 @@ class _AddScreenState extends State<AddScreen> {
     String url = await Provider.of<FirebaseWork>(context, listen: false)
         .getComplaintURL(_image, complaintId);
     await Provider.of<FirebaseWork>(context, listen: false)
-        .setComplaint(complaintId, complaint, status, priority, url);
+        .setComplaint(complaintId, complaint, status, priority, url, type);
     setState(() {
       loading = false;
     });
@@ -106,7 +106,7 @@ class _AddScreenState extends State<AddScreen> {
                       onChanged: (value) async {
                         setState(() {
                           rvalue = value;
-                          complaint = rvalue;
+                          type = rvalue;
                         });
                       },
                     ),
@@ -146,6 +146,9 @@ class _AddScreenState extends State<AddScreen> {
                   Container(
                     margin: EdgeInsets.only(top: 10.0),
                     child: TextField(
+                      onChanged: (val){
+                        complaint = val;
+                      },
                       decoration: InputDecoration(
                         labelText: 'Complaint',
                         border: OutlineInputBorder(

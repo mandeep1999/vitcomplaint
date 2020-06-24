@@ -3,18 +3,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
 import 'package:vitcomplaint/screens/add_screen.dart';
-import 'package:vitcomplaint/widgets/user_card.dart';
+import 'package:vitcomplaint/widgets/complaint_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-String search = '';
-List<UserCard> messageBubbles = [];
-class _HomeScreenState extends State<HomeScreen> {
 
+String search = '';
+List<ComplaintCard> messageBubbles = [];
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // TODO: implement initState
@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     search = '';
     messageBubbles = [];
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,19 +37,29 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: Text(
                 'Home',
                 style: TextStyle(
-                    fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
+                    fontSize: 30.0,
+                    color: Colors.white,
+                    fontFamily: 'Pacifico'),
               ),
-              trailing: IconButton(icon: FaIcon( FontAwesomeIcons.plus,color: Colors.white,size: 20.0,),onPressed: (){
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => SingleChildScrollView(
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: AddScreen(),
-                        )));
-              },),
+              trailing: IconButton(
+                icon: FaIcon(
+                  FontAwesomeIcons.plus,
+                  color: Colors.white,
+                  size: 20.0,
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => SingleChildScrollView(
+                              child: Container(
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom),
+                            child: AddScreen(),
+                          )));
+                },
+              ),
             ),
           ),
           Expanded(
@@ -74,24 +85,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 15.0,
                     ),
                     TextField(
-                      onChanged: (value){
+                      onChanged: (value) {
                         setState(() {
                           search = value;
                           messageBubbles = [];
                         });
-
                       },
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         hintText: 'Search here',
                         border: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
+                              BorderSide(color: Theme.of(context).primaryColor),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
+                              BorderSide(color: Theme.of(context).primaryColor),
                           borderRadius: BorderRadius.circular(45.0),
                         ),
                       ),
@@ -118,10 +128,12 @@ class UserStream extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String blockValue = Provider.of<FirebaseWork>(context).block;
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('profiles').snapshots(),
+      stream: _firestore
+          .collection('complaints/$blockValue/complaints')
+          .snapshots(),
       builder: (context, snapshot) {
-        List<UserCard> messageBubbles = [];
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(
@@ -134,47 +146,56 @@ class UserStream extends StatelessWidget {
           final block = message.data['block'];
           final name = message.data['name'];
           final imageURL = message.data['url'];
+          final type = message.data['type'];
+          final priority = message.data['priority'];
+          final status = message.data['status'];
+          final complaint = message.data['complaint'];
+          final user = message.data['user'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
-          if(name != null && name != ''){
-            if (currentUser == id){
-            } else{
+          if (name != null && name != '') {
+            if (currentUser == user) {
               bool searchBool = search != '' ? true : false;
-              if(searchBool == true
+              if (searchBool == true
                   ? name.toLowerCase().startsWith(search.toLowerCase())
-                  : true){
-                final messageBubble = UserCard(
-                  imageURL : imageURL,
+                  : true) {
+                final messageBubble = ComplaintCard(
+                  imageURL: imageURL,
                   name: name,
                   block: block,
-                  id: id,
+                  complaint: complaint,
+                  complaintID: id,
+                  priority: priority,
+                  type: type,
+                  status: status,
                 );
                 messageBubbles.add(messageBubble);
-              }}}
+              }
+            }
+          }
         }
         return ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
           children: messageBubbles.isEmpty
               ? <Widget>[
-            Center(
-                child: Text(
-                  'Nothing here yet.',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold),
-                )),
-            SizedBox(
-              height: 40.0,
-            ),
-            Center(
-              child: Image.asset('assets/images/nothing.jpg'),
-            ),
-          ]
+                  Center(
+                      child: Text(
+                    'Nothing here yet.',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  )),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  Center(
+                    child: Image.asset('assets/images/nothing.jpg'),
+                  ),
+                ]
               : messageBubbles,
         );
       },
     );
   }
 }
-

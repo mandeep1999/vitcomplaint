@@ -72,10 +72,13 @@ class FirebaseWork extends ChangeNotifier {
   }
 
   Future<void> setComplaint(String id, String complaint, String status,
-      String priority, String complaintUrl) async {
+      String priority, String complaintUrl, String type) async {
     print('submit');
-    await _firestore.collection(block).document(id).setData({
+    await _firestore.collection('complaints').document(block).collection('complaints').document(id).setData({
       'user': uid,
+      'name' : userName,
+      'block' : block,
+      'type' : type,
       'complaint': complaint,
       'status': status,
       'priority': priority,
