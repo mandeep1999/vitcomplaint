@@ -85,6 +85,10 @@ class FirebaseWork extends ChangeNotifier {
       'url': complaintUrl
     });
   }
+  Future<void> deleteComplaint(String id) async {
+    print('delete');
+    await _firestore.collection('complaints').document(block).collection('complaints').document(id).delete();
+  }
 
   Future<void> sendRequest(
       String senderID, String receiverID, String name, String block) async {

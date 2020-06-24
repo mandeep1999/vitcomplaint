@@ -134,6 +134,7 @@ class UserStream extends StatelessWidget {
           .collection('complaints/$blockValue/complaints')
           .snapshots(),
       builder: (context, snapshot) {
+        List<ComplaintCard> messageBubbles = [];
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(
@@ -144,12 +145,12 @@ class UserStream extends StatelessWidget {
         final messages = snapshot.data.documents;
         for (var message in messages) {
           final block = message.data['block'];
-          final name = message.data['name'];
+          final String name = message.data['name'];
           final imageURL = message.data['url'];
-          final type = message.data['type'];
-          final priority = message.data['priority'];
-          final status = message.data['status'];
-          final complaint = message.data['complaint'];
+          final String type = message.data['type'];
+          final String priority = message.data['priority'];
+          final String status = message.data['status'];
+          final String complaint = message.data['complaint'];
           final user = message.data['user'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
@@ -157,7 +158,13 @@ class UserStream extends StatelessWidget {
             if (currentUser == user) {
               bool searchBool = search != '' ? true : false;
               if (searchBool == true
-                  ? name.toLowerCase().startsWith(search.toLowerCase())
+                  ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
+                      complaint
+                          .toLowerCase()
+                          .startsWith(search.toLowerCase()) ||
+                      status.toLowerCase().startsWith(search.toLowerCase()) ||
+                      priority.toLowerCase().startsWith(search.toLowerCase()) ||
+                      name.toLowerCase().startsWith(search.toLowerCase()))
                   : true) {
                 final messageBubble = ComplaintCard(
                   imageURL: imageURL,

@@ -13,7 +13,7 @@ class AddScreen extends StatefulWidget {
 
 final picker = ImagePicker();
 File _image;
-String complaintId, complaint, status = 'Pending', priority,type;
+String complaintId, complaint, status = 'Pending', priority = 'Not so urgent',type;
 bool loading = false;
 
 class _AddScreenState extends State<AddScreen> {
@@ -28,10 +28,13 @@ class _AddScreenState extends State<AddScreen> {
     setState(() {
       loading = true;
     });
-    String url = await Provider.of<FirebaseWork>(context, listen: false)
-        .getComplaintURL(_image, complaintId);
+    String url;
+    if(_image != null){
+    url = await Provider.of<FirebaseWork>(context, listen: false)
+        .getComplaintURL(_image, complaintId);}
+    if(type != null){
     await Provider.of<FirebaseWork>(context, listen: false)
-        .setComplaint(complaintId, complaint, status, priority, url, type);
+        .setComplaint(complaintId, complaint, status, priority, url, type);}
     setState(() {
       loading = false;
     });
