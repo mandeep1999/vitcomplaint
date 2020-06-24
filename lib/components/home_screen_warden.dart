@@ -43,25 +43,6 @@ class _HomeScreenWardenState extends State<HomeScreenWarden> {
                     color: Colors.white,
                     fontFamily: 'Pacifico'),
               ),
-              trailing: IconButton(
-                icon: FaIcon(
-                  FontAwesomeIcons.plus,
-                  color: Colors.white,
-                  size: 20.0,
-                ),
-                onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => SingleChildScrollView(
-                          child: Container(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                MediaQuery.of(context).viewInsets.bottom),
-                            child: AddScreen(),
-                          )));
-                },
-              ),
             ),
           ),
           Expanded(
@@ -154,17 +135,12 @@ class UserStream extends StatelessWidget {
           final String priority = message.data['priority'];
           final String status = message.data['status'];
           final String complaint = message.data['complaint'];
-          final user = message.data['user'];
+          final String room = message.data['room'];
           final id = message.documentID;
-          final currentUser = Provider.of<FirebaseWork>(context).uid;
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
-            if (roommates == null) {
               if (searchBool == true
-                  ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
-                  complaint
-                      .toLowerCase()
-                      .startsWith(search.toLowerCase()) ||
+                  ? (type.toLowerCase().startsWith(search.toLowerCase())  ||
                   status.toLowerCase().startsWith(search.toLowerCase()) ||
                   priority.toLowerCase().startsWith(search.toLowerCase()) ||
                   name.toLowerCase().startsWith(search.toLowerCase()))
@@ -174,6 +150,7 @@ class UserStream extends StatelessWidget {
                   name: name,
                   block: block,
                   complaint: complaint,
+                  room: room,
                   complaintID: id,
                   priority: priority,
                   type: type,
@@ -181,40 +158,7 @@ class UserStream extends StatelessWidget {
                 );
                 messageBubbles.add(messageBubble);
               }
-            } else {
-              for (String i in roommates) {
-                if (i.toLowerCase() == user || currentUser == user) {
-                  print([i.toLowerCase(), user]);
 
-                  if (searchBool == true
-                      ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
-                      complaint
-                          .toLowerCase()
-                          .startsWith(search.toLowerCase()) ||
-                      status
-                          .toLowerCase()
-                          .startsWith(search.toLowerCase()) ||
-                      priority
-                          .toLowerCase()
-                          .startsWith(search.toLowerCase()) ||
-                      name.toLowerCase().startsWith(search.toLowerCase()))
-                      : true) {
-                    final messageBubble = ComplaintCard(
-                      imageURL: imageURL,
-                      name: name,
-                      block: block,
-                      complaint: complaint,
-                      complaintID: id,
-                      priority: priority,
-                      type: type,
-                      status: status,
-                    );
-                    messageBubbles.add(messageBubble);
-                  }
-                  break;
-                }
-              }
-            }
           }
         }
         return ListView(

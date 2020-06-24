@@ -59,7 +59,14 @@ class FirebaseWork extends ChangeNotifier {
     await _firestore
         .collection('profiles')
         .document(uid)
-        .setData({'name': name, 'url': url, 'block': block, 'room' : room});
+        .setData({'name': name, 'url': url, 'block': block, 'room' : room, 'warden' : warden});
+    await getProfile();
+  }
+  Future<void> setProfileWarden(String name, String url, String block) async {
+    await _firestore
+        .collection('profiles')
+        .document(uid)
+        .setData({'name': name, 'url': url, 'block': block, 'room' : room, 'warden' : warden});
     await getProfile();
   }
 
@@ -96,6 +103,7 @@ class FirebaseWork extends ChangeNotifier {
       'user': uid,
       'name' : userName,
       'block' : block,
+      'room' : room,
       'type' : type,
       'complaint': complaint,
       'status': status,

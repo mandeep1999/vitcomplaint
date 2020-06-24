@@ -17,7 +17,6 @@ class _ProfileScreenWardenState extends State<ProfileScreenWarden>
     with TickerProviderStateMixin {
   bool editName = false;
   bool editBlock = false;
-  bool editRoom = false;
   File _image;
   bool loading = false;
 
@@ -36,9 +35,6 @@ class _ProfileScreenWardenState extends State<ProfileScreenWarden>
     String block = Provider.of<FirebaseWork>(context).block == null
         ? 'null'
         : Provider.of<FirebaseWork>(context).block;
-    String room = Provider.of<FirebaseWork>(context).room == null
-        ? 'Room no'
-        : Provider.of<FirebaseWork>(context).room;
     String url = Provider.of<FirebaseWork>(context).url;
 
     List<String> _blocks = ['A', 'B', 'C', 'D'];
@@ -56,7 +52,7 @@ class _ProfileScreenWardenState extends State<ProfileScreenWarden>
         loading = true;
       });
       await Provider.of<FirebaseWork>(context, listen: false)
-          .setProfile(name, url, block=='null'? null : block, room);
+          .setProfileWarden(name, url, block=='null'? null : block);
       setState(() {
         loading = false;
       });
@@ -322,90 +318,6 @@ class _ProfileScreenWardenState extends State<ProfileScreenWarden>
                                     await submit();
                                     setState(() {
                                       editBlock = false;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 10.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Theme.of(context)
-                                      .primaryColor),
-                              borderRadius:
-                              BorderRadius.circular(10.0),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 2.0,
-                                  spreadRadius: 0.0,
-                                  offset: Offset(2.0,
-                                      2.0), // shadow direction: bottom right
-                                )
-                              ],
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 5.0, horizontal: 10.0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                editRoom == false
-                                    ? Text(
-                                  room,
-                                  style: TextStyle(
-                                      fontSize: 20.0),
-                                )
-                                    : Expanded(
-                                  child:
-                                  SingleChildScrollView(
-                                    child: Container(
-                                      width: 200.0,
-                                      child: TextField(
-                                        keyboardType:
-                                        TextInputType
-                                            .number,
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                              context)
-                                              .primaryColor,
-                                        ),
-                                        onChanged: (value) {
-                                          room = value;
-                                        },
-                                        autofocus: true,
-                                        decoration:
-                                        InputDecoration(
-                                            border:
-                                            InputBorder
-                                                .none,
-                                            hintText:
-                                            'Write your room no.'),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                editRoom == false
-                                    ? IconButton(
-                                  icon: FaIcon(
-                                      FontAwesomeIcons.edit),
-                                  onPressed: () {
-                                    setState(() {
-                                      editRoom = true;
-                                    });
-                                  },
-                                )
-                                    : IconButton(
-                                  icon: FaIcon(
-                                      FontAwesomeIcons.save),
-                                  onPressed: () async {
-                                    await submit();
-                                    setState(() {
-                                      editRoom = false;
                                     });
                                   },
                                 ),

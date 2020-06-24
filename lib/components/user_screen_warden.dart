@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
-import 'package:vitcomplaint/screens/requests_screen.dart';
 import 'package:vitcomplaint/widgets/user_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -38,17 +36,6 @@ class _UserScreenWardenState extends State<UserScreenWarden> {
                 style: TextStyle(
                     fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
               ),
-              trailing: IconButton(icon: FaIcon( FontAwesomeIcons.receipt,color: Colors.white,size: 20.0,),onPressed: (){
-                showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => SingleChildScrollView(
-                        child: Container(
-                          padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom),
-                          child: RequestsScreen(),
-                        )));
-              },),
             ),
           ),
           Expanded(
@@ -66,7 +53,7 @@ class _UserScreenWardenState extends State<UserScreenWarden> {
                 child: Column(
                   children: [
                     Text(
-                      'Search your roommate.',
+                      'Search students.',
                       style: TextStyle(
                           fontSize: 25.0, fontWeight: FontWeight.w500),
                     ),
@@ -134,6 +121,8 @@ class UserStream extends StatelessWidget {
           final block = message.data['block'];
           final name = message.data['name'];
           final imageURL = message.data['url'];
+          final bool  warden = message.data['warden'];
+          final String room = message.data['room'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
           if(name != null && name != ''){
@@ -148,6 +137,8 @@ class UserStream extends StatelessWidget {
                   name: name,
                   block: block,
                   id: id,
+                  room : room,
+                  warden : warden,
                 );
                 messageBubbles.add(messageBubble);
               }}}

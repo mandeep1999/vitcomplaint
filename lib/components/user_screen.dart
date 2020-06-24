@@ -134,9 +134,10 @@ class UserStream extends StatelessWidget {
           final block = message.data['block'];
           final name = message.data['name'];
           final imageURL = message.data['url'];
+          final bool warden = message.data['warden'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
-          if(name != null && name != ''){
+          if(name != null && name != '' && warden != true){
           if (currentUser == id){
           } else{
             bool searchBool = search != '' ? true : false;
@@ -148,6 +149,7 @@ class UserStream extends StatelessWidget {
               name: name,
               block: block,
               id: id,
+              warden: warden,
             );
             messageBubbles.add(messageBubble);
           }}}

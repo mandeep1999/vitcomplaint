@@ -37,6 +37,7 @@ class _AddScreenState extends State<AddScreen> {
         .setComplaint(complaintId, complaint, status, priority, url, type);}
     setState(() {
       loading = false;
+      Navigator.pop(context);
     });
   }
 

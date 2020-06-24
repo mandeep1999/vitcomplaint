@@ -43,25 +43,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white,
                     fontFamily: 'Pacifico'),
               ),
-              trailing: IconButton(
-                icon: FaIcon(
-                  FontAwesomeIcons.plus,
-                  color: Colors.white,
-                  size: 20.0,
-                ),
-                onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => SingleChildScrollView(
-                              child: Container(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
-                            child: AddScreen(),
-                          )));
-                },
-              ),
+              trailing: (Provider.of<FirebaseWork>(context).room == null ||
+                      Provider.of<FirebaseWork>(context).block == null)
+                  ? Container(
+                      height: 0,
+                      width: 0,
+                    )
+                  : IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.plus,
+                        color: Colors.white,
+                        size: 20.0,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) => SingleChildScrollView(
+                                    child: Container(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: AddScreen(),
+                                )));
+                      },
+                    ),
             ),
           ),
           Expanded(
@@ -151,6 +158,7 @@ class UserStream extends StatelessWidget {
           final String name = message.data['name'];
           final imageURL = message.data['url'];
           final String type = message.data['type'];
+          final String room = message.data['room'];
           final String priority = message.data['priority'];
           final String status = message.data['status'];
           final String complaint = message.data['complaint'];
@@ -161,10 +169,7 @@ class UserStream extends StatelessWidget {
           if (name != null && name != '') {
             if (roommates == null) {
               if (searchBool == true
-                  ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
-                      complaint
-                          .toLowerCase()
-                          .startsWith(search.toLowerCase()) ||
+                  ? (type.toLowerCase().startsWith(search.toLowerCase())  ||
                       status.toLowerCase().startsWith(search.toLowerCase()) ||
                       priority.toLowerCase().startsWith(search.toLowerCase()) ||
                       name.toLowerCase().startsWith(search.toLowerCase()))
@@ -176,6 +181,7 @@ class UserStream extends StatelessWidget {
                   complaint: complaint,
                   complaintID: id,
                   priority: priority,
+                  room: room,
                   type: type,
                   status: status,
                 );
@@ -233,7 +239,8 @@ class UserStream extends StatelessWidget {
                     height: 40.0,
                   ),
                   Center(
-                    child: Provider.of<FirebaseWork>(context).block != null
+                    child: (Provider.of<FirebaseWork>(context).block != null ||
+                            Provider.of<FirebaseWork>(context).room != null)
                         ? Image.asset('assets/images/nothing.jpg')
                         : Text(
                             'Set up your profile first.',

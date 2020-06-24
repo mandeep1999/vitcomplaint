@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class UserAvatar extends StatelessWidget {
   final String imageURL;
-  UserAvatar({this.imageURL});
+  final bool warden;
+  UserAvatar({this.imageURL,this.warden});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +27,7 @@ class UserAvatar extends StatelessWidget {
           placeholderScale: 10.8,
           imageCacheHeight: 85,
           imageCacheWidth: 85,
-          placeholder: 'assets/images/student.png',
+          placeholder: warden == true ? 'assets/images/warden.png' :'assets/images/student.png',
           image: imageURL != null
               ? imageURL
               : 'https://source.unsplash.com/1600x900/daily/?nature,water,sun',

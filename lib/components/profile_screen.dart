@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         loading = true;
       });
       await Provider.of<FirebaseWork>(context, listen: false)
-          .setProfile(name, url, block, room);
+          .setProfile(name, url, block == 'null' ? null : block, room == 'Room no' ? null : room);
       setState(() {
         loading = false;
       });
