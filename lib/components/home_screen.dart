@@ -5,7 +5,7 @@ import 'package:vitcomplaint/provider/firebase_work.dart';
 import 'package:vitcomplaint/screens/add_screen.dart';
 import 'package:vitcomplaint/widgets/complaint_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     search = '';
     messageBubbles = [];
+    Provider.of<FirebaseWork>(context,listen: false).getRoommates();
   }
 
   @override
@@ -111,7 +112,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 15.0,
                     ),
                     Expanded(
-                      child: UserStream(),
+                      child: Provider.of<FirebaseWork>(context).roommates != null ? UserStream() :  Center(
+                        child: SpinKitCubeGrid(
+                          color: Theme.of(context).primaryColor,
+                          size: 50.0,
+                        ),
+                      ),
                     ),
                   ],
                 ),

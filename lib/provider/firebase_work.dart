@@ -13,13 +13,12 @@ class FirebaseWork extends ChangeNotifier {
   bool warden;
   String block;
   String room;
+  bool loaded = false;
   List<dynamic> roommates;
   Future<bool> getUser() async {
     user = await _firebaseAuth.currentUser();
     if (user != null) {
       uid = user.uid;
-      await getProfile();
-      await getRoommates();
       return true;
     }
     return false;
@@ -36,6 +35,7 @@ class FirebaseWork extends ChangeNotifier {
         room = message.data['room'];
       }
     }
+    loaded = true;
     notifyListeners();
   }
 
