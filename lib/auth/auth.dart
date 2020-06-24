@@ -28,7 +28,7 @@ class Auth implements BaseAuth {
               .createUserWithEmailAndPassword(email: email, password: password);
           user = result.user;
           user.sendEmailVerification();
-          await setAdmin(warden, email);
+          await setAdmin(warden, email ,user.uid);
         } else {
           errorMessage = "You are not authorized.";
           return errorMessage;
@@ -38,7 +38,7 @@ class Auth implements BaseAuth {
             email: email, password: password);
         user = result.user;
         user.sendEmailVerification();
-        await setAdmin(warden, email);
+        await setAdmin(warden, email,user.uid);
       }
     } catch (error) {
       print(error.code);
@@ -153,14 +153,14 @@ class Auth implements BaseAuth {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> setAdmin(bool warden, String email) async {
+  Future<void> setAdmin(bool warden, String email, String uid) async {
     await _firestore
-        .collection("profiles")
-        .add({'email': email, 'warden': warden});
+        .collection("users")
+        .add({'email': email, 'warden': warden , 'uid' : uid});
   }
 
   Future<bool> checkAdmin(email) async {
-    final items = await _firestore.collection('profiles').getDocuments();
+    final items = await _firestore.collection('users').getDocuments();
     for (var message in items.documents) {
       if (message.data['email'] == email) {
         bool warden = message.data['warden'];

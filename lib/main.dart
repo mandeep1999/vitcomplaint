@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vitcomplaint/provider/firebase_work.dart';
+import 'package:vitcomplaint/screens/home_warden.dart';
 import 'package:vitcomplaint/screens/loading_screen.dart';
 import 'package:vitcomplaint/theme/themes.dart';
 import 'screens/welcome_screen.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         WelcomeScreen.id : (context) => WelcomeScreen(),
         Home.id : (context) => Home(),
         LoadingScreen.id : (context) => LoadingScreen(),
+        HomeWarden.id : (context) => HomeWarden(),
       },
     );
   }

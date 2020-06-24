@@ -36,7 +36,23 @@ class FirebaseWork extends ChangeNotifier {
       }
     }
     loaded = true;
+   await checkAdmin(uid);
     notifyListeners();
+  }
+  Future<bool> checkAdmin(uid) async {
+    final items = await _firestore.collection('users').getDocuments();
+    for (var message in items.documents) {
+      if (message.data['uid'] == uid) {
+        bool warden = message.data['warden'];
+        print(warden);
+        if (warden == false) {
+          warden = false;
+          return false;
+        }
+      }
+    }
+    warden = true;
+    return true;
   }
 
   Future<void> setProfile(String name, String url, String block, String room) async {
