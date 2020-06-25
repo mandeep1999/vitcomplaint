@@ -178,7 +178,7 @@ class UserStream extends StatelessWidget {
           );
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
-            if (roommates.isEmpty) {
+            if (roommates.isEmpty && user == currentUser) {
               if (searchBool == true
                   ? (type
                           .toLowerCase()

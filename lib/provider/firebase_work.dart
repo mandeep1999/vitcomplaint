@@ -44,9 +44,9 @@ class FirebaseWork extends ChangeNotifier {
     final items = await _firestore.collection('users').getDocuments();
     for (var message in items.documents) {
       if (message.data['uid'] == uid) {
-        bool warden = message.data['warden'];
-        print(warden);
-        if (warden == false) {
+        bool warden1 = message.data['warden'];
+        print(warden1);
+        if (warden1 == false) {
           warden = false;
           return false;
         }
