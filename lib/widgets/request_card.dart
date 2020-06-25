@@ -63,8 +63,8 @@ class _RequestCardState extends State<RequestCard> {
               children: [
                 Expanded(
                   child: MaterialButton(
-                    onPressed: () {
-                      Provider.of<FirebaseWork>(context, listen: false)
+                    onPressed: ()async {
+                     await Provider.of<FirebaseWork>(context, listen: false)
                           .acceptRequest(widget.senderID, widget.receiverID);
                     },
                     child: Text(
@@ -75,8 +75,8 @@ class _RequestCardState extends State<RequestCard> {
                 ),
                 Expanded(
                   child: MaterialButton(
-                    onPressed: () {
-                      Provider.of<FirebaseWork>(context, listen: false)
+                    onPressed: () async{
+                     await Provider.of<FirebaseWork>(context, listen: false)
                           .rejectRequest(widget.senderID, widget.receiverID);
                     },
                     child: Text(

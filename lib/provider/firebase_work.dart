@@ -163,12 +163,35 @@ class FirebaseWork extends ChangeNotifier {
   }
 
   Future<void> acceptRequest(String senderID, String receiverID) async {
+    bool condition = true;
+    if(roommates != null) {
+      for (String i in roommates){
+        if(i.toLowerCase().trim() == senderID.toLowerCase().trim()){
+          condition = false;
+        }
+      }
+    }
+    if(condition == true){
+    List<dynamic> result = [senderID];
+    if(roommates != null){
+    for(String i in roommates){
+      result.add(i);
+    }}
     await _firestore.collection('roommates').document(receiverID).setData({
-      'roommates': FieldValue.arrayUnion([senderID])
+      'roommates': result
     });
+    List<dynamic> result1 = [];
+    final items = await _firestore.collection('roommates').getDocuments();
+    for (var message in items.documents) {
+      if (message.documentID == senderID) {
+        result1 = message.data['roommates'];
+      }
+    }
+    result1.add(receiverID);
     await _firestore.collection('roommates').document(senderID).setData({
-      'roommates': FieldValue.arrayUnion([receiverID])
+      'roommates': result1
     });
+    result = []; result1 = [];}
     await _firestore
         .collection('requests')
         .document(senderID + receiverID)
@@ -178,10 +201,11 @@ class FirebaseWork extends ChangeNotifier {
 
   Future<void> deleteRoommate(String id) async {
     List<dynamic> result = [];
+    if(roommates != null){
     for (String i in roommates) {
       if (i.toLowerCase().trim() != id.toLowerCase().trim()) {
         result.add(i);
-      }
+      }}
     }
     await _firestore
         .collection('roommates')

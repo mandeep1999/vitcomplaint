@@ -80,7 +80,7 @@ class _UserCardState extends State<UserCard> {
                             setState(() {
                               loading = true;
                             });
-                            await Provider.of<FirebaseWork>(context,listen: false).sendRequest(Provider.of<FirebaseWork>(context,listen: false).uid, widget.id, widget.name, widget.block);
+                            await Provider.of<FirebaseWork>(context,listen: false).sendRequest(Provider.of<FirebaseWork>(context,listen: false).uid, widget.id, Provider.of<FirebaseWork>(context).userName, widget.block);
                             setState(() {
                               loading = false;
                               sent = true;
