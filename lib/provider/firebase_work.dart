@@ -19,6 +19,7 @@ class FirebaseWork extends ChangeNotifier {
     user = await _firebaseAuth.currentUser();
     if (user != null) {
       uid = user.uid;
+      await checkAdmin(uid);
       return true;
     }
     return false;
@@ -36,9 +37,9 @@ class FirebaseWork extends ChangeNotifier {
       }
     }
     loaded = true;
-   await checkAdmin(uid);
     notifyListeners();
   }
+
   Future<bool> checkAdmin(uid) async {
     final items = await _firestore.collection('users').getDocuments();
     for (var message in items.documents) {
@@ -55,18 +56,25 @@ class FirebaseWork extends ChangeNotifier {
     return true;
   }
 
-  Future<void> setProfile(String name, String url, String block, String room) async {
-    await _firestore
-        .collection('profiles')
-        .document(uid)
-        .setData({'name': name, 'url': url, 'block': block, 'room' : room, 'warden' : warden});
+  Future<void> setProfile(
+      String name, String url, String block, String room) async {
+    await _firestore.collection('profiles').document(uid).setData({
+      'name': name,
+      'url': url,
+      'block': block,
+      'room': room,
+      'warden': warden
+    });
     await getProfile();
   }
+
   Future<void> setProfileWarden(String name, String url, String block) async {
-    await _firestore
-        .collection('profiles')
-        .document(uid)
-        .setData({'name': name, 'url': url, 'block': block, 'room' : room, 'warden' : warden});
+    await _firestore.collection('profiles').document(uid).setData({
+      'name': name,
+      'url': url,
+      'block': block,
+      'warden': warden
+    });
     await getProfile();
   }
 
@@ -85,7 +93,7 @@ class FirebaseWork extends ChangeNotifier {
   Future<String> getComplaintURL(File _image, String id) async {
     String url;
     StorageReference storageReference =
-    FirebaseStorage.instance.ref().child('pictures/complaints/$uid/$id');
+        FirebaseStorage.instance.ref().child('pictures/complaints/$uid/$id');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
@@ -99,21 +107,46 @@ class FirebaseWork extends ChangeNotifier {
   Future<void> setComplaint(String id, String complaint, String status,
       String priority, String complaintUrl, String type) async {
     print('submit');
-    await _firestore.collection('complaints').document(block).collection('complaints').document(id).setData({
+    await _firestore
+        .collection('complaints')
+        .document(block)
+        .collection('complaints')
+        .document(id)
+        .setData({
       'user': uid,
-      'name' : userName,
-      'block' : block,
-      'room' : room,
-      'type' : type,
+      'name': userName,
+      'block': block,
+      'room': room,
+      'type': type,
       'complaint': complaint,
       'status': status,
       'priority': priority,
       'url': complaintUrl
     });
   }
+
+  Future<void> updateComplaint(
+      String id, String status, String priority) async {
+    print('submit');
+    await _firestore
+        .collection('complaints')
+        .document(block)
+        .collection('complaints')
+        .document(id)
+        .updateData({
+      'status': status,
+      'priority': priority,
+    });
+  }
+
   Future<void> deleteComplaint(String id) async {
     print('delete');
-    await _firestore.collection('complaints').document(block).collection('complaints').document(id).delete();
+    await _firestore
+        .collection('complaints')
+        .document(block)
+        .collection('complaints')
+        .document(id)
+        .delete();
   }
 
   Future<void> sendRequest(
@@ -128,14 +161,59 @@ class FirebaseWork extends ChangeNotifier {
       'block': block
     });
   }
-  Future<void> acceptRequest(String senderID, String receiverID)async{
-    await _firestore.collection('roommates').document(receiverID).setData({'roommates' : FieldValue.arrayUnion([senderID])});
-    await _firestore.collection('roommates').document(senderID).setData({'roommates' : FieldValue.arrayUnion([receiverID])});
-    await _firestore.collection('requests').document(senderID+receiverID).delete();
+
+  Future<void> acceptRequest(String senderID, String receiverID) async {
+    await _firestore.collection('roommates').document(receiverID).setData({
+      'roommates': FieldValue.arrayUnion([senderID])
+    });
+    await _firestore.collection('roommates').document(senderID).setData({
+      'roommates': FieldValue.arrayUnion([receiverID])
+    });
+    await _firestore
+        .collection('requests')
+        .document(senderID + receiverID)
+        .delete();
+    await getRoommates();
   }
-  Future<void> rejectRequest(String senderID, String receiverID)async{
-    await _firestore.collection('requests').document(senderID+receiverID).delete();
+
+  Future<void> deleteRoommate(String id) async {
+    List<dynamic> result = [];
+    for (String i in roommates) {
+      if (i.toLowerCase().trim() != id.toLowerCase().trim()) {
+        result.add(i);
+      }
+    }
+    await _firestore
+        .collection('roommates')
+        .document(uid)
+        .setData({'roommates': result});
+    result.clear();
+    List<dynamic> roome = [];
+    final items = await _firestore.collection('roommates').getDocuments();
+    for (var message in items.documents) {
+      if (message.documentID == id) {
+        roome = message.data['roommates'];
+      }
+    }
+    for (String i in roome) {
+      if (i.toLowerCase().trim() != uid.toLowerCase().trim()) {
+        result.add(i);
+      }
+    }
+    await _firestore
+        .collection('roommates')
+        .document(id)
+        .setData({'roommates': result});
+    await getRoommates();
   }
+
+  Future<void> rejectRequest(String senderID, String receiverID) async {
+    await _firestore
+        .collection('requests')
+        .document(senderID + receiverID)
+        .delete();
+  }
+
   Future<void> getRoommates() async {
     final items = await _firestore.collection('roommates').getDocuments();
     for (var message in items.documents) {
@@ -145,7 +223,8 @@ class FirebaseWork extends ChangeNotifier {
     }
     notifyListeners();
   }
-  Future<void> signOut()async{
+
+  Future<void> signOut() async {
     uid = null;
     await _firebaseAuth.signOut();
   }

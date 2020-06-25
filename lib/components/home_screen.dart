@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 String search = '';
 List<ComplaintCard> messageBubbles = [];
-List<dynamic> roommates;
+List<dynamic> roommates = [];
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -162,62 +162,48 @@ class UserStream extends StatelessWidget {
           final String priority = message.data['priority'];
           final String status = message.data['status'];
           final String complaint = message.data['complaint'];
-          final user = message.data['user'];
+          final String user = message.data['user'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
+          final messageBubble = ComplaintCard(
+            imageURL: imageURL,
+            name: name,
+            block: block,
+            complaint: complaint,
+            complaintID: id,
+            priority: priority,
+            room: room,
+            type: type,
+            status: status,
+          );
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
             if (roommates == null) {
+
               if (searchBool == true
-                  ? (type.toLowerCase().startsWith(search.toLowerCase())  ||
-                      status.toLowerCase().startsWith(search.toLowerCase()) ||
-                      priority.toLowerCase().startsWith(search.toLowerCase()) ||
-                      name.toLowerCase().startsWith(search.toLowerCase()))
+                  ? (type.toLowerCase().trim().startsWith(search.toLowerCase().trim()) ||
+                      status.toLowerCase().trim().startsWith(search.toLowerCase().trim()) ||
+                      priority.toLowerCase().trim().startsWith(search.toLowerCase()) ||
+                      name.toLowerCase().trim().startsWith(search.toLowerCase().trim()))
                   : true) {
-                final messageBubble = ComplaintCard(
-                  imageURL: imageURL,
-                  name: name,
-                  block: block,
-                  complaint: complaint,
-                  complaintID: id,
-                  priority: priority,
-                  room: room,
-                  type: type,
-                  status: status,
-                );
+
                 messageBubbles.add(messageBubble);
               }
             } else {
               for (String i in roommates) {
-                if (i.toLowerCase() == user || currentUser == user) {
-                  print([i.toLowerCase(), user]);
-
+                if (i.toLowerCase().trim() == user.toLowerCase().trim() || currentUser.toLowerCase().trim() == user.toLowerCase().trim()) {
                   if (searchBool == true
-                      ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
-                          complaint
-                              .toLowerCase()
-                              .startsWith(search.toLowerCase()) ||
+                      ? (type.toLowerCase().trim().startsWith(search.toLowerCase().trim()) ||
                           status
-                              .toLowerCase()
-                              .startsWith(search.toLowerCase()) ||
+                              .toLowerCase().trim()
+                              .startsWith(search.toLowerCase().trim()) ||
                           priority
-                              .toLowerCase()
-                              .startsWith(search.toLowerCase()) ||
-                          name.toLowerCase().startsWith(search.toLowerCase()))
+                              .toLowerCase().trim()
+                              .startsWith(search.toLowerCase().trim()) ||
+                          name.toLowerCase().startsWith(search.toLowerCase().trim()))
                       : true) {
-                    final messageBubble = ComplaintCard(
-                      imageURL: imageURL,
-                      name: name,
-                      block: block,
-                      complaint: complaint,
-                      complaintID: id,
-                      priority: priority,
-                      type: type,
-                      status: status,
-                    );
                     messageBubbles.add(messageBubble);
                   }
-                  break;
                 }
               }
             }

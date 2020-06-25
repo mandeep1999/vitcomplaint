@@ -34,16 +34,14 @@ class _ComplaintCardState extends State<ComplaintCard> {
   List<String> _priority = ['Urgent', 'Not so urgent'];
   List<String> _status = ['Pending', 'Solved', 'In progress'];
   Future<void> submit(String priority, String status) async {
-    await Provider.of<FirebaseWork>(context, listen: false).setComplaint(
-        widget.complaintID,
-        widget.complaint,
-        status,
-        priority,
-        widget.imageURL,
-        widget.type);
+    await Provider.of<FirebaseWork>(context, listen: false).updateComplaint(
+      widget.complaintID,
+      status,
+      priority,
+    );
   }
 
-  void showError(String errorMessage,String name) {
+  void showError(String errorMessage, String name) {
     showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         transitionBuilder: (context, a1, a2, widget) {
@@ -87,7 +85,7 @@ class _ComplaintCardState extends State<ComplaintCard> {
       children: [
         GestureDetector(
           onLongPress: () {
-            showError(widget.complaint,widget.name);
+            showError(widget.complaint, widget.name);
           },
           child: Container(
             margin: EdgeInsets.only(bottom: 12.0),

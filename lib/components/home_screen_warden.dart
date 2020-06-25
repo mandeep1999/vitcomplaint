@@ -79,12 +79,12 @@ class _HomeScreenWardenState extends State<HomeScreenWarden> {
                         hintText: 'Search here',
                         border: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
+                              BorderSide(color: Theme.of(context).primaryColor),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
+                              BorderSide(color: Theme.of(context).primaryColor),
                           borderRadius: BorderRadius.circular(45.0),
                         ),
                       ),
@@ -139,53 +139,52 @@ class UserStream extends StatelessWidget {
           final id = message.documentID;
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
-              if (searchBool == true
-                  ? (type.toLowerCase().startsWith(search.toLowerCase())  ||
-                  status.toLowerCase().startsWith(search.toLowerCase()) ||
-                  priority.toLowerCase().startsWith(search.toLowerCase()) ||
-                  name.toLowerCase().startsWith(search.toLowerCase()))
-                  : true) {
-                final messageBubble = ComplaintCard(
-                  imageURL: imageURL,
-                  name: name,
-                  block: block,
-                  complaint: complaint,
-                  room: room,
-                  complaintID: id,
-                  priority: priority,
-                  type: type,
-                  status: status,
-                );
-                messageBubbles.add(messageBubble);
-              }
-
+            if (searchBool == true
+                ? (type.toLowerCase().startsWith(search.toLowerCase()) ||
+                    status.toLowerCase().startsWith(search.toLowerCase()) ||
+                    priority.toLowerCase().startsWith(search.toLowerCase()) ||
+                    name.toLowerCase().startsWith(search.toLowerCase()))
+                : true) {
+              final messageBubble = ComplaintCard(
+                imageURL: imageURL,
+                name: name,
+                block: block,
+                complaint: complaint,
+                room: room,
+                complaintID: id,
+                priority: priority,
+                type: type,
+                status: status,
+              );
+              messageBubbles.add(messageBubble);
+            }
           }
         }
         return ListView(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
           children: messageBubbles.isEmpty
               ? <Widget>[
-            Center(
-                child: Text(
-                  'Nothing here yet.',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold),
-                )),
-            SizedBox(
-              height: 40.0,
-            ),
-            Center(
-              child: Provider.of<FirebaseWork>(context).block != null
-                  ? Image.asset('assets/images/nothing.jpg')
-                  : Text(
-                'Set up your profile first.',
-                style: TextStyle(
-                    fontSize: 30.0, fontFamily: 'Pacifico'),
-              ),
-            ),
-          ]
+                  Center(
+                      child: Text(
+                    'Nothing here yet.',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
+                  )),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  Center(
+                    child: Provider.of<FirebaseWork>(context).block != null
+                        ? Image.asset('assets/images/nothing.jpg')
+                        : Text(
+                            'Set up your profile first.',
+                            style: TextStyle(
+                                fontSize: 30.0, fontFamily: 'Pacifico'),
+                          ),
+                  ),
+                ]
               : messageBubbles,
         );
       },

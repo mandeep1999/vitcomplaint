@@ -158,7 +158,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     style: TextStyle(fontSize: 20.0),
                   ),
                   Container(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(2.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
