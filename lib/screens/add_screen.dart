@@ -42,9 +42,9 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   List<String> _blocks = [
-    'Room Cleaning',
+    'Cleaning',
     'AC',
-    'Electricty',
+    'Electricity',
     'Furniture',
     'Others'
   ];

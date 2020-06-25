@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vitcomplaint/screens/welcome_screen.dart';
+import 'package:vitcomplaint/widgets/rounded_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -21,9 +22,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   File _image;
   bool loading = false;
 
+  String tempName,tempBlock,tempRoom;
   @override
   void initState() {
-    // TODO: implement initState
+    tempName = null; tempBlock = null ; tempRoom = null;
     super.initState();
     Provider.of<FirebaseWork>(context, listen: false).getProfile();
   }
@@ -31,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     String name = Provider.of<FirebaseWork>(context).userName == null
-        ? 'name'
+        ? 'Name'
         : Provider.of<FirebaseWork>(context).userName;
     String block = Provider.of<FirebaseWork>(context).block == null
         ? 'null'
@@ -55,8 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       setState(() {
         loading = true;
       });
-      await Provider.of<FirebaseWork>(context, listen: false)
-          .setProfile(name, url, block == 'null' ? null : block, room == 'Room no' ? null : room);
+      await Provider.of<FirebaseWork>(context, listen: false).setProfile(tempName == null ? name : tempName,
+          url, tempBlock == null ? block : tempBlock,  tempRoom == null ? room : tempRoom);
       setState(() {
         loading = false;
       });
@@ -68,25 +70,35 @@ class _ProfileScreenState extends State<ProfileScreen>
           Container(
             height: 75.0,
             width: double.infinity,
-            padding: EdgeInsets.only(top: 10.0,left: 5.0),
+            padding: EdgeInsets.only(top: 10.0, left: 5.0),
             color: Theme.of(context).primaryColor,
             child: ListTile(
               leading: Text(
                 'Profile',
                 style: TextStyle(
-                    fontSize: 30.0, color: Colors.white, fontFamily: 'Pacifico'),
+                    fontSize: 30.0,
+                    color: Colors.white,
+                    fontFamily: 'Pacifico'),
               ),
-              trailing: IconButton(icon: FaIcon(FontAwesomeIcons.signOutAlt,color: Colors.white,),onPressed: ()async{
-                await Provider.of<FirebaseWork>(context,listen: false).signOut();
-                Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.id, (route) => false);
-              },),
+              trailing: IconButton(
+                icon: FaIcon(
+                  FontAwesomeIcons.signOutAlt,
+                  color: Colors.white,
+                ),
+                onPressed: () async {
+                  await Provider.of<FirebaseWork>(context, listen: false)
+                      .signOut();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, WelcomeScreen.id, (route) => false);
+                },
+              ),
             ),
           ),
           Expanded(
             child: Container(
               color: Theme.of(context).primaryColor,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -186,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     child:
                                                         SingleChildScrollView(
                                                       child: Text(
-                                                        name,
+                                                        tempName == null ? name : tempName ,
                                                         style: TextStyle(
                                                             fontSize: 20.0),
                                                       ),
@@ -200,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             .primaryColor,
                                                       ),
                                                       onChanged: (value) {
-                                                        name = value;
+                                                        tempName = value;
                                                       },
                                                       autofocus: true,
                                                       decoration: InputDecoration(
@@ -224,7 +236,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     icon: FaIcon(
                                                         FontAwesomeIcons.save),
                                                     onPressed: () async {
-                                                      await submit();
                                                       setState(() {
                                                         editName = false;
                                                       });
@@ -261,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           children: [
                                             editBlock == false
                                                 ? Text(
-                                                    block + ' block',
+                                              (tempBlock == null ? block : tempBlock) + ' block',
                                                     style: TextStyle(
                                                         fontSize: 20.0),
                                                   )
@@ -299,10 +310,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       }).toList(),
                                                       onChanged: (value) async {
                                                         setState(() {
-                                                          block = value;
+                                                          tempBlock = value;
                                                           editBlock = false;
                                                         });
-                                                        await submit();
                                                       },
                                                     )),
                                             editBlock == false
@@ -319,7 +329,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     icon: FaIcon(
                                                         FontAwesomeIcons.save),
                                                     onPressed: () async {
-                                                      await submit();
                                                       setState(() {
                                                         editBlock = false;
                                                       });
@@ -356,7 +365,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           children: [
                                             editRoom == false
                                                 ? Text(
-                                                    room,
+                                                    tempRoom == null ? room : tempRoom,
                                                     style: TextStyle(
                                                         fontSize: 20.0),
                                                   )
@@ -375,7 +384,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 .primaryColor,
                                                           ),
                                                           onChanged: (value) {
-                                                            room = value;
+                                                            tempRoom = value;
                                                           },
                                                           autofocus: true,
                                                           decoration:
@@ -403,7 +412,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     icon: FaIcon(
                                                         FontAwesomeIcons.save),
                                                     onPressed: () async {
-                                                      await submit();
                                                       setState(() {
                                                         editRoom = false;
                                                       });
@@ -411,6 +419,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   ),
                                           ],
                                         ),
+                                      ),
+                                      RoundedButton(
+                                        title: 'Save',
+                                        onPressed: () async {
+                                          await submit();
+                                        },
+                                        colour: Theme.of(context).primaryColor,
                                       ),
                                     ],
                                   ),

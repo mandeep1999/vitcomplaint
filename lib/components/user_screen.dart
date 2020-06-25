@@ -175,6 +175,7 @@ class UserStream extends StatelessWidget {
                   imageURL: imageURL,
                   name: name,
                   block: block,
+                  room: room,
                   id: id,
                   warden: warden,
                   friend: false,

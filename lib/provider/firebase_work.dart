@@ -226,6 +226,12 @@ class FirebaseWork extends ChangeNotifier {
 
   Future<void> signOut() async {
     uid = null;
+    userName = null;
+    room = null;
+    warden = null;
+    block = null;
+    url = null;
+    roommates = null;
     await _firebaseAuth.signOut();
   }
 }

@@ -178,7 +178,8 @@ class UserStream extends StatelessWidget {
           );
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
-            if (roommates.isEmpty && user == currentUser) {
+            print(roommates);
+            if ((roommates == null || roommates.isEmpty) && user == currentUser) {
               if (searchBool == true
                   ? (type
                           .toLowerCase()
@@ -250,7 +251,7 @@ class UserStream extends StatelessWidget {
                         : Text(
                             'Set up your profile first.',
                             style: TextStyle(
-                                fontSize: 30.0, fontFamily: 'Pacifico'),
+                                fontSize: 25.0, fontFamily: 'Pacifico'),
                           ),
                   ),
                 ]
