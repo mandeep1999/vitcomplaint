@@ -141,6 +141,7 @@ class UserStream extends StatelessWidget {
                   warden : warden,
                 );
                 messageBubbles.add(messageBubble);
+
               }}}
         }
         return ListView(

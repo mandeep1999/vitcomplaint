@@ -57,8 +57,9 @@ class _UserCardState extends State<UserCard> {
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 22.0),
                             ),
+                            SizedBox(height: 5.0,),
                             Text(
-                              widget.block  + ( widget.room != null ? ' - ' + widget.room : ''),
+                              widget.block + (widget.room != null ? ( ' - ' + widget.room) : '') ,
                               style: TextStyle(fontSize: 18.0),
                             ),
                           ],
