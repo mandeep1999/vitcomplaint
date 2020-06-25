@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 class UserCard extends StatefulWidget {
 
   final String imageURL, name, block, id, room;
-  final bool warden;
+  final bool warden,friend;
   UserCard(
-      {@required this.imageURL, @required this.block, @required this.name, @required this.id, @required this.warden, @required this.room});
+      {@required this.imageURL, @required this.block, @required this.name, @required this.id, @required this.warden, @required this.room, @required this.friend});
 
   @override
   _UserCardState createState() => _UserCardState();
@@ -66,7 +66,7 @@ class _UserCardState extends State<UserCard> {
                       ),
                     ],
                   ),
-                  Provider.of<FirebaseWork>(context).warden != true ? Container(
+                  (Provider.of<FirebaseWork>(context).warden != true && widget.friend == false) ? Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

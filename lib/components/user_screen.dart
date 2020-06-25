@@ -149,17 +149,18 @@ class UserStream extends StatelessWidget {
           final bool warden = message.data['warden'];
           final id = message.documentID;
           final currentUser = Provider.of<FirebaseWork>(context).uid;
-          final messageBubble = UserCard(
-            imageURL: imageURL,
-            name: name,
-            block: block,
-            id: id,
-            warden: warden,
-          );
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '' && warden != true) {
             if (currentUser != id) {
               if (roommates != null && searchBool == false) {
+                final messageBubble = UserCard(
+                  imageURL: imageURL,
+                  name: name,
+                  block: block,
+                  id: id,
+                  warden: warden,
+                  friend: true,
+                );
                 for (String roommate in roommates) {
                   if (roommate.toLowerCase() == id.toLowerCase()) {
                     messageBubbles.add(messageBubble);
@@ -168,6 +169,14 @@ class UserStream extends StatelessWidget {
               } else if (searchBool == true
                   ? name.toLowerCase().startsWith(search.toLowerCase())
                   : true) {
+                final messageBubble = UserCard(
+                  imageURL: imageURL,
+                  name: name,
+                  block: block,
+                  id: id,
+                  warden: warden,
+                  friend: false,
+                );
                 messageBubbles.add(messageBubble);
               }
             }
