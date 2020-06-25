@@ -223,6 +223,7 @@ class UserStream extends StatelessWidget {
                               .startsWith(search.toLowerCase().trim()))
                       : true) {
                     messageBubbles.add(messageBubble);
+                    break;
                   }
                 }
               }
