@@ -178,29 +178,48 @@ class UserStream extends StatelessWidget {
           );
           bool searchBool = search != '' ? true : false;
           if (name != null && name != '') {
-            if (roommates == null) {
-
+            if (roommates.isEmpty) {
               if (searchBool == true
-                  ? (type.toLowerCase().trim().startsWith(search.toLowerCase().trim()) ||
-                      status.toLowerCase().trim().startsWith(search.toLowerCase().trim()) ||
-                      priority.toLowerCase().trim().startsWith(search.toLowerCase()) ||
-                      name.toLowerCase().trim().startsWith(search.toLowerCase().trim()))
+                  ? (type
+                          .toLowerCase()
+                          .trim()
+                          .startsWith(search.toLowerCase().trim()) ||
+                      status
+                          .toLowerCase()
+                          .trim()
+                          .startsWith(search.toLowerCase().trim()) ||
+                      priority
+                          .toLowerCase()
+                          .trim()
+                          .startsWith(search.toLowerCase()) ||
+                      name
+                          .toLowerCase()
+                          .trim()
+                          .startsWith(search.toLowerCase().trim()))
                   : true) {
-
                 messageBubbles.add(messageBubble);
               }
             } else {
               for (String i in roommates) {
-                if (i.toLowerCase().trim() == user.toLowerCase().trim() || currentUser.toLowerCase().trim() == user.toLowerCase().trim()) {
+                if (i.toLowerCase().trim() == user.toLowerCase().trim() ||
+                    currentUser.toLowerCase().trim() ==
+                        user.toLowerCase().trim()) {
                   if (searchBool == true
-                      ? (type.toLowerCase().trim().startsWith(search.toLowerCase().trim()) ||
+                      ? (type
+                              .toLowerCase()
+                              .trim()
+                              .startsWith(search.toLowerCase().trim()) ||
                           status
-                              .toLowerCase().trim()
+                              .toLowerCase()
+                              .trim()
                               .startsWith(search.toLowerCase().trim()) ||
                           priority
-                              .toLowerCase().trim()
+                              .toLowerCase()
+                              .trim()
                               .startsWith(search.toLowerCase().trim()) ||
-                          name.toLowerCase().startsWith(search.toLowerCase().trim()))
+                          name
+                              .toLowerCase()
+                              .startsWith(search.toLowerCase().trim()))
                       : true) {
                     messageBubbles.add(messageBubble);
                   }
